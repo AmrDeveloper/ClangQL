@@ -1,6 +1,22 @@
 [package]
 name = "clangql"
+authors = ["AmrDeveloper"]
 version = "0.1.0"
 edition = "2021"
+description = "A tool to run SQL-like query on your C/C++ Abstract syntax tree"
+license = "MIT"
+repository = "https://github.com/amrdeveloper/clangql/"
+documentation = "https://github.com/amrdeveloper/clangql"
+readme = "README.md"
+keywords = ["cli", "files", "language", "gitql", "clangql"]
+categories = ["command-line-utilities"]
+exclude = [".github/**", "docs/**", "media/**", "scripts/**"]
 
 [dependencies]
+gitql-cli = "0.16.0"
+gitql-ast = "0.14.0"
+gitql-parser = "0.15.0"
+gitql-engine = "0.16.0"
+lazy_static = "1.4.0"
+atty = "0.2.14"
+clang-sys = "1.7.0"
