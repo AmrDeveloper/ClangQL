@@ -11,6 +11,7 @@ pub struct FunctionNode {
     pub signature: String,
     pub return_type: String,
     pub arguments_count: i32,
+    pub is_method: bool,
 }
 
 pub fn select_clang_functions(path: &str) -> Vec<FunctionNode> {
@@ -70,13 +71,16 @@ extern "C" fn visit_children(
 
             let arguments_count = clang_getNumArgTypes(function_type);
 
+            let is_method = cursor_kind == CXCursor_CXXMethod;
+
             functions.push(FunctionNode {
                 name: name.to_string(),
                 signature: signature.to_string(),
                 return_type: return_type.to_string(),
                 arguments_count,
+                is_method,
             })
         }
     }
-    1
+    CXChildVisit_Continue
 }

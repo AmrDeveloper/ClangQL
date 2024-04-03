@@ -120,6 +120,11 @@ fn select_functions(
                 continue;
             }
 
+            if field_name == "is_method" {
+                values.push(Value::Boolean(function.is_method));
+                continue;
+            }
+
             values.push(Value::Null);
         }
 
