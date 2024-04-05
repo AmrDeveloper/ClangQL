@@ -17,7 +17,7 @@ ClangQL is a tool that allow you to run SQL-like query on C/C++ Code of database
 </p>
 
 <p align="center">
-  <img src="media/clangql_demo.png" alt="animated" width="100%"/>
+  <img src="media/clangql_demo.PNG" alt="animated" width="100%"/>
 </p>
 
 ---
