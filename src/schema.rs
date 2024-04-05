@@ -19,7 +19,13 @@ lazy_static! {
         let mut map = HashMap::new();
         map.insert(
             "functions",
-            vec!["name", "signature", "args_count", "return_type", "is_method"],
+            vec![
+                "name",
+                "signature",
+                "args_count",
+                "return_type",
+                "is_method",
+            ],
         );
         map
     };
