@@ -337,22 +337,23 @@ dependencies = [
 
 [[package]]
 name = "gitql-ast"
-version = "0.14.0"
+version = "0.15.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f1b9fbb03def0979789195910c35504efeefc7835de20a3cc9036a0870f0eba3"
+checksum = "e9c3bf96d706a6bb4d465b4636f785836c803fbb24c26e9ae4f54c3631635189"
 dependencies = [
  "chrono",
  "csv",
  "lazy_static",
+ "rand",
  "regex",
  "serde_json",
 ]
 
 [[package]]
 name = "gitql-cli"
-version = "0.16.0"
+version = "0.17.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "de1f5b31125b641f2434ce88eada84795bf184fe82377d5412d1c60f29d04fbb"
+checksum = "1549832ca97d7460231c03289f3fb8b65702f8a740e94d99f877456958698061"
 dependencies = [
  "comfy-table",
  "gitql-ast",
@@ -362,9 +363,9 @@ dependencies = [
 
 [[package]]
 name = "gitql-engine"
-version = "0.16.0"
+version = "0.17.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "91ca162dc5fb8a103e4e49dde66b8fd6062b1fec9877decdb19ec7b5896284db"
+checksum = "9132470f1b27728e8ccd3f169e02d2e3cbb91a113498d7d35ecaa9ee3ca65705"
 dependencies = [
  "gitql-ast",
  "gix",
@@ -373,18 +374,18 @@ dependencies = [
 
 [[package]]
 name = "gitql-parser"
-version = "0.15.0"
+version = "0.16.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "45797787acb91608d15e99af79d69a7dd57b8080f6352cd90cb5bbc594b483ff"
+checksum = "35adbe7c91e4d9c9d51355b4a0f8cc6a4d75457aad5058bf52074b55a80f2e69"
 dependencies = [
  "gitql-ast",
 ]
 
 [[package]]
 name = "gix"
-version = "0.60.0"
+version = "0.61.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "027b87106e07ab0965541f71dadd7db87be3f2b26feda3cce50028566a4dff0c"
+checksum = "e4e0e59a44bf00de058ee98d6ecf3c9ed8f8842c1da642258ae4120d41ded8f7"
 dependencies = [
  "gix-actor",
  "gix-attributes",
@@ -1259,6 +1260,12 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "439ee305def115ba05938db6eb1644ff94165c5ab5e9420d1c1bcedbba909391"
 
 [[package]]
+name = "ppv-lite86"
+version = "0.2.17"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "5b40af805b3121feab8a3c29f04d8ad262fa8e0561883e7653e024ae4479e6de"
+
+[[package]]
 name = "proc-macro2"
 version = "1.0.79"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1280,6 +1287,36 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "291ec9ab5efd934aaf503a6466c5d5251535d108ee747472c3977cc5acc868ef"
 dependencies = [
  "proc-macro2",
+]
+
+[[package]]
+name = "rand"
+version = "0.8.5"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "34af8d1a0e25924bc5b7c43c079c942339d8f0a8b57c39049bef581b46327404"
+dependencies = [
+ "libc",
+ "rand_chacha",
+ "rand_core",
+]
+
+[[package]]
+name = "rand_chacha"
+version = "0.3.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "e6c10a63a0fa32252be49d21e7709d4d4baf8d231c2dbce1eaa8141b9b127d88"
+dependencies = [
+ "ppv-lite86",
+ "rand_core",
+]
+
+[[package]]
+name = "rand_core"
+version = "0.6.4"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "ec0be4795e2f6a28069bec0b5ff3e2ac9bafc99e6a9a7dc3547996c5c816922c"
+dependencies = [
+ "getrandom",
 ]
 
 [[package]]

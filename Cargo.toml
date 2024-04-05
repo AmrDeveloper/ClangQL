@@ -13,10 +13,10 @@ categories = ["command-line-utilities"]
 exclude = [".github/**", "docs/**", "media/**", "scripts/**"]
 
 [dependencies]
-gitql-cli = "0.16.0"
-gitql-ast = "0.14.0"
-gitql-parser = "0.15.0"
-gitql-engine = "0.16.0"
+gitql-cli = "0.17.0"
+gitql-ast = "0.15.0"
+gitql-parser = "0.16.0"
+gitql-engine = "0.17.0"
 lazy_static = "1.4.0"
 atty = "0.2.14"
 clang-sys = "1.7.0"
