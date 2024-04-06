@@ -9,7 +9,6 @@
   <img alt="Deps" src="https://deps.rs/repo/github/amrdeveloper/clangql/status.svg">
   <img alt="GitHub issues" src="https://img.shields.io/github/issues/amrdeveloper/clangql">
   <img alt="GitHub" src="https://img.shields.io/github/license/amrdeveloper/clangql">
-  <img alt="GitHub all releases" src="https://img.shields.io/github/downloads/amrdeveloper/clangql/total">
 </p>
 
 <p align="center">
