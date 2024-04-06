@@ -13,7 +13,7 @@
 </p>
 
 <p align="center">
-ClangQL is a tool that allow you to run SQL-like query on C/C++ Code of database files using the GitQL SDK.
+ClangQL is a tool that allow you to run SQL-like query on C/C++ Code instead of database files using the GitQL SDK.
 </p>
 
 <p align="center">
