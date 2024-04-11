@@ -31,9 +31,6 @@ pub fn select_clang_functions(path: &str) -> Vec<FunctionNode> {
         );
 
         let cursor = clang_getTranslationUnitCursor(translation_unit);
-        let cursor_kind = clang_getCursorKindSpelling(clang_getCursorKind(cursor));
-        clang_disposeString(cursor_kind);
-
         clang_visitChildren(cursor, visit_children, data);
 
         // Dispose the translation unit
@@ -52,10 +49,17 @@ extern "C" fn visit_children(
     data: *mut c_void,
 ) -> CXChildVisitResult {
     unsafe {
-        let functions = &mut *(data as *mut Vec<FunctionNode>);
+        if clang_Location_isFromMainFile(clang_getCursorLocation(cursor)) == 0 {
+            return CXChildVisit_Continue;
+        }
 
         let cursor_kind = clang_getCursorKind(cursor);
-        if cursor_kind == CXCursor_FunctionDecl || cursor_kind == CXCursor_CXXMethod {
+        if cursor_kind == CXCursor_FunctionDecl
+            || cursor_kind == CXCursor_CXXMethod
+            || cursor_kind == CXCursor_FunctionTemplate
+        {
+            let functions = &mut *(data as *mut Vec<FunctionNode>);
+
             let cursor_name = clang_getCursorSpelling(cursor);
             let name = CStr::from_ptr(clang_getCString(cursor_name)).to_string_lossy();
 
@@ -79,8 +83,12 @@ extern "C" fn visit_children(
                 return_type: return_type.to_string(),
                 arguments_count,
                 is_method,
-            })
+            });
+
+            clang_disposeString(cursor_name);
+            clang_disposeString(function_signature);
+            clang_disposeString(result_type_spelling);
         }
     }
-    CXChildVisit_Continue
+    CXChildVisit_Recurse
 }
