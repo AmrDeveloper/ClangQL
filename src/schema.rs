@@ -10,6 +10,7 @@ lazy_static! {
         map.insert("args_count", DataType::Integer);
         map.insert("return_type", DataType::Text);
         map.insert("is_method", DataType::Boolean);
+        map.insert("has_template", DataType::Boolean);
         map
     };
 }
@@ -25,6 +26,7 @@ lazy_static! {
                 "args_count",
                 "return_type",
                 "is_method",
+                "has_template",
             ],
         );
         map

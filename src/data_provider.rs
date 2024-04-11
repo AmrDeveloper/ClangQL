@@ -125,6 +125,11 @@ fn select_functions(
                 continue;
             }
 
+            if field_name == "has_template" {
+                values.push(Value::Boolean(function.has_template));
+                continue;
+            }
+
             values.push(Value::Null);
         }
 

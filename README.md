@@ -41,13 +41,14 @@ SELECT DISTINCT name AS function_name FROM functions
 
 ### Functions table structure
 
-| Name      | Type    | Description              |
-| --------- | ------- | ------------------------ |
-| name      | Text    | Function or Method name                |
-| signature    | Text    | Parameters and return type literal         |
-| args_count | Integer    | Number of arguments    |
-| return_type    | Text | Return type literal |
-| is_method   | Boolean | True if it's a method      |
+| Name         | Type    | Description                        |
+| ------------ | ------- | ---------------------------------- |
+| name         | Text    | Function or Method name            |
+| signature    | Text    | Parameters and return type literal |
+| args_count   | Integer | Number of arguments                |
+| return_type  | Text    | Return type literal                |
+| is_method    | Boolean | True if it's a method              |
+| has_template | Boolean | True if it's has template          |
 
 ---
 
