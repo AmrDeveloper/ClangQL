@@ -11,7 +11,9 @@ pub struct FunctionNode {
     pub signature: String,
     pub return_type: String,
     pub arguments_count: i32,
+    pub class_name: String,
     pub is_method: bool,
+    pub has_template: bool,
 }
 
 pub fn select_clang_functions(path: &str) -> Vec<FunctionNode> {
@@ -45,7 +47,7 @@ pub fn select_clang_functions(path: &str) -> Vec<FunctionNode> {
 
 extern "C" fn visit_children(
     cursor: CXCursor,
-    _parent: CXCursor,
+    parent: CXCursor,
     data: *mut c_void,
 ) -> CXChildVisitResult {
     unsafe {
@@ -76,13 +78,25 @@ extern "C" fn visit_children(
             let arguments_count = clang_getNumArgTypes(function_type);
 
             let is_method = cursor_kind == CXCursor_CXXMethod;
+            let has_template = cursor_kind == CXCursor_FunctionTemplate;
+
+            let class_name = if is_method {
+                let parent_spelling = clang_getCursorSpelling(parent);
+                let parent_name =
+                    CStr::from_ptr(clang_getCString(parent_spelling)).to_string_lossy();
+                parent_name.to_string()
+            } else {
+                "None".to_string()
+            };
 
             functions.push(FunctionNode {
                 name: name.to_string(),
                 signature: signature.to_string(),
                 return_type: return_type.to_string(),
                 arguments_count,
+                class_name,
                 is_method,
+                has_template,
             });
 
             clang_disposeString(cursor_name);

@@ -46,6 +46,7 @@ SELECT DISTINCT name AS function_name FROM functions
 | name         | Text    | Function or Method name            |
 | signature    | Text    | Parameters and return type literal |
 | args_count   | Integer | Number of arguments                |
+| class_name   | Text    | Return class name for method       |
 | return_type  | Text    | Return type literal                |
 | is_method    | Boolean | True if it's a method              |
 | has_template | Boolean | True if it's has template          |

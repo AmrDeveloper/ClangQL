@@ -115,6 +115,12 @@ fn select_functions(
                 continue;
             }
 
+            if field_name == "class_name" {
+                values.push(Value::Text(function.class_name.to_owned()));
+                continue;
+            }
+
+
             if field_name == "return_type" {
                 values.push(Value::Text(function.return_type.to_owned()));
                 continue;
