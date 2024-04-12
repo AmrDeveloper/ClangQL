@@ -11,6 +11,7 @@ lazy_static! {
         map.insert("return_type", DataType::Text);
         map.insert("class_name", DataType::Text);
         map.insert("is_method", DataType::Boolean);
+        map.insert("is_virtual", DataType::Boolean);
         map.insert("has_template", DataType::Boolean);
         map
     };
@@ -28,6 +29,7 @@ lazy_static! {
                 "return_type",
                 "class_name",
                 "is_method",
+                "is_virtual",
                 "has_template",
             ],
         );
