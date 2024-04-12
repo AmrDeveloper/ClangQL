@@ -130,6 +130,11 @@ fn select_functions(
                 continue;
             }
 
+            if field_name == "is_virtual" {
+                values.push(Value::Boolean(function.is_virtual));
+                continue;
+            }
+
             if field_name == "has_template" {
                 values.push(Value::Boolean(function.has_template));
                 continue;

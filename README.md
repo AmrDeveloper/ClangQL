@@ -41,15 +41,16 @@ SELECT DISTINCT name AS function_name FROM functions
 
 ### Functions table structure
 
-| Name         | Type    | Description                        |
-| ------------ | ------- | ---------------------------------- |
-| name         | Text    | Function or Method name            |
-| signature    | Text    | Parameters and return type literal |
-| args_count   | Integer | Number of arguments                |
-| class_name   | Text    | Return class name for method       |
-| return_type  | Text    | Return type literal                |
-| is_method    | Boolean | True if it's a method              |
-| has_template | Boolean | True if it's has template          |
+| Name         | Type    | Description                                                                                                                                                         |
+| ------------ | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| name         | Text    | Function or Method name                                                                                                                                             |
+| signature    | Text    | Parameters and return type literal                                                                                                                                  |
+| args_count   | Integer | Number of arguments                                                                                                                                                 |
+| class_name   | Text    | Return class name for method                                                                                                                                        |
+| return_type  | Text    | Return type literal                                                                                                                                                 |
+| is_method    | Boolean | True if it's a method                                                                                                                                               |
+| is_virtual   | Boolean | Return true if a C++ member function or member function template is  explicitly declared 'virtual' or if it overrides a virtual method from one of the base classes |
+| has_template | Boolean | True if it's has template                                                                                                                                           |
 
 ---
 
