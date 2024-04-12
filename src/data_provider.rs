@@ -120,7 +120,6 @@ fn select_functions(
                 continue;
             }
 
-
             if field_name == "return_type" {
                 values.push(Value::Text(function.return_type.to_owned()));
                 continue;
