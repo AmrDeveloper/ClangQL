@@ -14,6 +14,7 @@ pub struct FunctionNode {
     pub class_name: String,
     pub is_method: bool,
     pub is_virtual: bool,
+    pub is_pure_virtual: bool,
     pub has_template: bool,
 }
 
@@ -96,6 +97,12 @@ extern "C" fn visit_children(
                 false
             };
 
+            let is_pure_virtual = if is_method {
+                clang_CXXMethod_isPureVirtual(cursor) != 0
+            } else {
+                false
+            };
+
             functions.push(FunctionNode {
                 name: name.to_string(),
                 signature: signature.to_string(),
@@ -104,6 +111,7 @@ extern "C" fn visit_children(
                 class_name,
                 is_method,
                 is_virtual,
+                is_pure_virtual,
                 has_template,
             });
 
