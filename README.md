@@ -28,9 +28,9 @@ Note that all Keywords in ClangQL are case-insensitive, similar to SQL.
 ```sql
 SELECT 1
 SELECT 1 + 2
-SELECT LEN("File Query Language")
+SELECT LEN("Clang Query Language")
 SELECT "One" IN ("One", "Two", "Three")
-SELECT "File Query Language" LIKE "%Query%"
+SELECT "Clang Query Language" LIKE "%Query%"
 
 SELECT * FROM functions
 SELECT COUNT(name) from functions WHERE return_type = "int"
