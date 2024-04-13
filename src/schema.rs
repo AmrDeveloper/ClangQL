@@ -13,6 +13,7 @@ lazy_static! {
         map.insert("is_method", DataType::Boolean);
         map.insert("is_virtual", DataType::Boolean);
         map.insert("is_pure_virtual", DataType::Boolean);
+        map.insert("is_static", DataType::Boolean);
         map.insert("has_template", DataType::Boolean);
         map
     };
@@ -32,6 +33,7 @@ lazy_static! {
                 "is_method",
                 "is_virtual",
                 "is_pure_virtual",
+                "is_static",
                 "has_template",
             ],
         );

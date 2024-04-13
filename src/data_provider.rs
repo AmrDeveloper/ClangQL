@@ -140,6 +140,11 @@ fn select_functions(
                 continue;
             }
 
+            if field_name == "is_static" {
+                values.push(Value::Boolean(function.is_static));
+                continue;
+            }
+
             if field_name == "has_template" {
                 values.push(Value::Boolean(function.has_template));
                 continue;

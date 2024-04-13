@@ -15,6 +15,7 @@ pub struct FunctionNode {
     pub is_method: bool,
     pub is_virtual: bool,
     pub is_pure_virtual: bool,
+    pub is_static: bool,
     pub has_template: bool,
 }
 
@@ -79,29 +80,26 @@ extern "C" fn visit_children(
 
             let arguments_count = clang_getNumArgTypes(function_type);
 
-            let is_method = cursor_kind == CXCursor_CXXMethod;
-            let has_template = cursor_kind == CXCursor_FunctionTemplate;
+            let mut is_method = false;
+            let mut has_template = false;
+            let mut class_name = String::from("None");
+            let mut is_virtual = false;
+            let mut is_pure_virtual = false;
+            let mut is_static = false;
 
-            let class_name = if is_method {
+            if cursor_kind == CXCursor_CXXMethod {
+                is_method = true;
+                has_template = cursor_kind == CXCursor_FunctionTemplate;
+
                 let parent_spelling = clang_getCursorSpelling(parent);
                 let parent_name =
                     CStr::from_ptr(clang_getCString(parent_spelling)).to_string_lossy();
-                parent_name.to_string()
-            } else {
-                "None".to_string()
-            };
+                class_name = parent_name.to_string();
 
-            let is_virtual = if is_method {
-                clang_CXXMethod_isVirtual(cursor) != 0
-            } else {
-                false
-            };
-
-            let is_pure_virtual = if is_method {
-                clang_CXXMethod_isPureVirtual(cursor) != 0
-            } else {
-                false
-            };
+                is_virtual = clang_CXXMethod_isVirtual(cursor) != 0;
+                is_pure_virtual = clang_CXXMethod_isPureVirtual(cursor) != 0;
+                is_static = clang_CXXMethod_isStatic(cursor) != 0;
+            }
 
             functions.push(FunctionNode {
                 name: name.to_string(),
@@ -112,6 +110,7 @@ extern "C" fn visit_children(
                 is_method,
                 is_virtual,
                 is_pure_virtual,
+                is_static,
                 has_template,
             });
 
