@@ -10,6 +10,7 @@ use gitql_engine::data_provider::DataProvider;
 use gitql_engine::engine_evaluator::evaluate_expression;
 
 use crate::clang_function_visitor;
+
 pub struct ClangAstDataProvider {
     pub paths: Vec<String>,
 }
@@ -142,6 +143,11 @@ fn select_functions(
 
             if field_name == "is_static" {
                 values.push(Value::Boolean(function.is_static));
+                continue;
+            }
+
+            if field_name == "is_const" {
+                values.push(Value::Boolean(function.is_const));
                 continue;
             }
 

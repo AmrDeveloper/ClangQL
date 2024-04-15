@@ -52,6 +52,7 @@ SELECT DISTINCT name AS function_name FROM functions
 | is_virtual      | Boolean | Return true if a C++ member function or member function template is  explicitly declared 'virtual' or if it overrides a virtual method from one of the base classes |
 | is_pure_virtual | Boolean | Return ture if a C++ member function or member function template is pure virtual.                                                                                   |
 | is_static       | Boolean | Return ture if a C++ member function is static.                                                                                                                     |
+| is_const        | Boolean | Return ture if a C++ member function is const.                                                                                                                      |
 | has_template    | Boolean | True if it's has template                                                                                                                                           |
 
 ---

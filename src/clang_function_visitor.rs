@@ -16,6 +16,7 @@ pub struct FunctionNode {
     pub is_virtual: bool,
     pub is_pure_virtual: bool,
     pub is_static: bool,
+    pub is_const: bool,
     pub has_template: bool,
 }
 
@@ -86,6 +87,7 @@ extern "C" fn visit_children(
             let mut is_virtual = false;
             let mut is_pure_virtual = false;
             let mut is_static = false;
+            let mut is_const = false;
 
             if cursor_kind == CXCursor_CXXMethod {
                 is_method = true;
@@ -99,6 +101,7 @@ extern "C" fn visit_children(
                 is_virtual = clang_CXXMethod_isVirtual(cursor) != 0;
                 is_pure_virtual = clang_CXXMethod_isPureVirtual(cursor) != 0;
                 is_static = clang_CXXMethod_isStatic(cursor) != 0;
+                is_const = clang_CXXMethod_isConst(cursor) != 0;
             }
 
             functions.push(FunctionNode {
@@ -111,6 +114,7 @@ extern "C" fn visit_children(
                 is_virtual,
                 is_pure_virtual,
                 is_static,
+                is_const,
                 has_template,
             });
 
