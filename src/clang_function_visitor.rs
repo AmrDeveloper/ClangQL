@@ -119,7 +119,7 @@ extern "C" fn visit_children(
                 is_static,
                 is_const,
                 has_template,
-                access_modifier
+                access_modifier,
             });
 
             clang_disposeString(cursor_name);

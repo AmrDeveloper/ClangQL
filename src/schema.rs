@@ -16,6 +16,7 @@ lazy_static! {
         map.insert("is_static", DataType::Boolean);
         map.insert("is_const", DataType::Boolean);
         map.insert("has_template", DataType::Boolean);
+        map.insert("access_modifier", DataType::Integer);
         map
     };
 }
@@ -37,6 +38,7 @@ lazy_static! {
                 "is_static",
                 "is_const",
                 "has_template",
+                "access_modifier",
             ],
         );
         map

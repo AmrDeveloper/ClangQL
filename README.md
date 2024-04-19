@@ -54,6 +54,7 @@ SELECT DISTINCT name AS function_name FROM functions
 | is_static       | Boolean | Return ture if a C++ member function is static.                                                                                                                     |
 | is_const        | Boolean | Return ture if a C++ member function is const.                                                                                                                      |
 | has_template    | Boolean | True if it's has template                                                                                                                                           |
+| access_modifier | Integer | Returns the access control level for method, 1 for public, 2 protected, 3 provide, 0 for invalid.                                                                   |
 
 ---
 
