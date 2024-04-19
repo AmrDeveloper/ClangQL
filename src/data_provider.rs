@@ -9,7 +9,7 @@ use gitql_engine::data_provider::select_values;
 use gitql_engine::data_provider::DataProvider;
 use gitql_engine::engine_evaluator::evaluate_expression;
 
-use crate::clang_function_visitor;
+use crate::visitor::function;
 
 pub struct ClangAstDataProvider {
     pub paths: Vec<String>,
@@ -85,7 +85,7 @@ fn select_functions(
     let values_len = fields_values.len() as i64;
     let padding = names_len - values_len;
 
-    let ast_functions = clang_function_visitor::select_clang_functions(path);
+    let ast_functions = function::select_clang_functions(path);
     for function in ast_functions.iter() {
         let mut values: Vec<Value> = Vec::with_capacity(fields_names.len());
 

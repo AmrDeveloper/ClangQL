@@ -20,9 +20,9 @@ use schema::TABLES_FIELDS_NAMES;
 use schema::TABLES_FIELDS_TYPES;
 
 mod arguments;
-mod clang_function_visitor;
 mod data_provider;
 mod schema;
+mod visitor;
 
 fn main() {
     if cfg!(debug_assertions) {
