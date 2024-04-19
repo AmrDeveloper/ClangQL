@@ -156,6 +156,11 @@ fn select_functions(
                 continue;
             }
 
+            if field_name == "access_modifier" {
+                values.push(Value::Integer(function.access_modifier as i64));
+                continue;
+            }
+
             values.push(Value::Null);
         }
 

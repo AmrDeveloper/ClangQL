@@ -18,6 +18,7 @@ pub struct FunctionNode {
     pub is_static: bool,
     pub is_const: bool,
     pub has_template: bool,
+    pub access_modifier: i32,
 }
 
 pub fn select_clang_functions(path: &str) -> Vec<FunctionNode> {
@@ -104,6 +105,8 @@ extern "C" fn visit_children(
                 is_const = clang_CXXMethod_isConst(cursor) != 0;
             }
 
+            let access_modifier = clang_getCXXAccessSpecifier(cursor);
+
             functions.push(FunctionNode {
                 name: name.to_string(),
                 signature: signature.to_string(),
@@ -116,6 +119,7 @@ extern "C" fn visit_children(
                 is_static,
                 is_const,
                 has_template,
+                access_modifier
             });
 
             clang_disposeString(cursor_name);
