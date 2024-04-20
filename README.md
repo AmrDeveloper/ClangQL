@@ -50,11 +50,12 @@ SELECT DISTINCT name AS function_name FROM functions
 | return_type     | Text    | Return type literal                                                                                                                                                 |
 | is_method       | Boolean | True if it's a method                                                                                                                                               |
 | is_virtual      | Boolean | Return true if a C++ member function or member function template is  explicitly declared 'virtual' or if it overrides a virtual method from one of the base classes |
-| is_pure_virtual | Boolean | Return ture if a C++ member function or member function template is pure virtual.                                                                                   |
-| is_static       | Boolean | Return ture if a C++ member function is static.                                                                                                                     |
-| is_const        | Boolean | Return ture if a C++ member function is const.                                                                                                                      |
+| is_pure_virtual | Boolean | Return ture if a C++ member function or member function template is pure virtual                                                                                    |
+| is_static       | Boolean | Return ture if a C++ member function is static                                                                                                                      |
+| is_const        | Boolean | Return ture if a C++ member function is const                                                                                                                       |
 | has_template    | Boolean | True if it's has template                                                                                                                                           |
-| access_modifier | Integer | Returns the access control level for method, 1 for public, 2 protected, 3 provide, 0 for invalid.                                                                   |
+| access_modifier | Integer | Returns the access control level for method, 1 for public, 2 protected, 3 provide, 0 for invalid                                                                    |
+| is_variadic     | Boolean | True if function type is variadic                                                                                                                                   |
 
 ---
 

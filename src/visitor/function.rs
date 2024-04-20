@@ -19,6 +19,7 @@ pub struct FunctionNode {
     pub is_const: bool,
     pub has_template: bool,
     pub access_modifier: i32,
+    pub is_variadic: bool,
 }
 
 pub fn select_clang_functions(path: &str) -> Vec<FunctionNode> {
@@ -106,6 +107,7 @@ extern "C" fn visit_children(
             }
 
             let access_modifier = clang_getCXXAccessSpecifier(cursor);
+            let is_variadic = clang_isFunctionTypeVariadic(function_type) != 0;
 
             functions.push(FunctionNode {
                 name: name.to_string(),
@@ -120,6 +122,7 @@ extern "C" fn visit_children(
                 is_const,
                 has_template,
                 access_modifier,
+                is_variadic,
             });
 
             clang_disposeString(cursor_name);

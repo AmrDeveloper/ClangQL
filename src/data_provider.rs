@@ -161,6 +161,11 @@ fn select_functions(
                 continue;
             }
 
+            if field_name == "is_variadic" {
+                values.push(Value::Boolean(function.is_variadic));
+                continue;
+            }
+
             values.push(Value::Null);
         }
 
