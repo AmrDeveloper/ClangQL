@@ -6,6 +6,7 @@ lazy_static! {
     pub static ref TABLES_FIELDS_TYPES: HashMap<&'static str, DataType> = {
         let mut map = HashMap::new();
         map.insert("name", DataType::Text);
+        map.insert("type", DataType::Text);
         map.insert("signature", DataType::Text);
         map.insert("args_count", DataType::Integer);
         map.insert("return_type", DataType::Text);
@@ -17,7 +18,7 @@ lazy_static! {
         map.insert("is_const", DataType::Boolean);
         map.insert("has_template", DataType::Boolean);
         map.insert("access_modifier", DataType::Integer);
-        map.insert("is_variadic", DataType::Integer);
+        map.insert("is_variadic", DataType::Boolean);
         map
     };
 }
@@ -43,6 +44,7 @@ lazy_static! {
                 "is_variadic",
             ],
         );
+        map.insert("globals", vec!["name", "type"]);
         map
     };
 }

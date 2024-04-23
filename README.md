@@ -35,6 +35,9 @@ SELECT "Clang Query Language" LIKE "%Query%"
 SELECT * FROM functions
 SELECT COUNT(name) from functions WHERE return_type = "int"
 SELECT DISTINCT name AS function_name FROM functions
+
+SELECT * FROM globals
+SELECT COUNT(name) from globals WHERE type = "int"
 ```
 
 ---
@@ -56,6 +59,15 @@ SELECT DISTINCT name AS function_name FROM functions
 | has_template    | Boolean | True if it's has template                                                                                                                                           |
 | access_modifier | Integer | Returns the access control level for method, 1 for public, 2 protected, 3 provide, 0 for invalid                                                                    |
 | is_variadic     | Boolean | True if function type is variadic                                                                                                                                   |
+
+---
+
+### Gloal variables table structure
+
+| Name | Type | Description                  |
+| ---- | ---- | ---------------------------- |
+| name | Text | Global variable name         |
+| type | Text | Global variable type literal |
 
 ---
 
