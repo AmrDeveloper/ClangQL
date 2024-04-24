@@ -19,6 +19,7 @@ lazy_static! {
         map.insert("has_template", DataType::Boolean);
         map.insert("access_modifier", DataType::Integer);
         map.insert("is_variadic", DataType::Boolean);
+        map.insert("is_volatile", DataType::Boolean);
         map
     };
 }
@@ -44,7 +45,7 @@ lazy_static! {
                 "is_variadic",
             ],
         );
-        map.insert("globals", vec!["name", "type"]);
+        map.insert("globals", vec!["name", "type", "is_volatile"]);
         map
     };
 }

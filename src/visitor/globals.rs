@@ -9,6 +9,7 @@ use std::ptr;
 pub struct GlobalVariableNode {
     pub name: String,
     pub type_literal: String,
+    pub is_volatile: bool,
 }
 
 pub fn select_clang_variables(path: &str) -> Vec<GlobalVariableNode> {
@@ -62,9 +63,12 @@ extern "C" fn visit_children(
                 CStr::from_ptr(clang_getCString(clang_getTypeSpelling(field_type)))
                     .to_string_lossy();
 
+            let is_volatile = clang_isVolatileQualifiedType(field_type) != 0;
+
             variables.push(GlobalVariableNode {
                 name: field_name_str.to_string(),
                 type_literal: field_type_str.to_string(),
+                is_volatile,
             });
 
             clang_disposeString(field_name);

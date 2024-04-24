@@ -217,6 +217,11 @@ fn select_variables(
                 continue;
             }
 
+            if field_name == "is_volatile" {
+                values.push(Value::Boolean(variable.is_volatile));
+                continue;
+            }
+
             values.push(Value::Null);
         }
 

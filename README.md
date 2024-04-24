@@ -38,6 +38,7 @@ SELECT DISTINCT name AS function_name FROM functions
 
 SELECT * FROM globals
 SELECT COUNT(name) from globals WHERE type = "int"
+SELECT * FROM globals WHERE is_volatile
 ```
 
 ---
@@ -64,10 +65,11 @@ SELECT COUNT(name) from globals WHERE type = "int"
 
 ### Gloal variables table structure
 
-| Name | Type | Description                  |
-| ---- | ---- | ---------------------------- |
-| name | Text | Global variable name         |
-| type | Text | Global variable type literal |
+| Name        | Type    | Description                       |
+| ----------- | ------- | --------------------------------- |
+| name        | Text    | Global variable name              |
+| type        | Text    | Global variable type literal      |
+| is_volatile | Boolean | True if variable type is volatile |
 
 ---
 
