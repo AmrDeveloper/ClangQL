@@ -60,6 +60,10 @@ SELECT * FROM globals WHERE is_volatile
 | has_template    | Boolean | True if it's has template                                                                                                                                           |
 | access_modifier | Integer | Returns the access control level for method, 1 for public, 2 protected, 3 provide, 0 for invalid                                                                    |
 | is_variadic     | Boolean | True if function type is variadic                                                                                                                                   |
+| file            | Text    | File path                                                                                                                                                           |
+| line            | Integer | Line at the file path                                                                                                                                               |
+| column          | Integer | Column at the file path                                                                                                                                             |
+| offset          | Integer | Offset at the file path                                                                                                                                             |
 
 ---
 
@@ -70,6 +74,10 @@ SELECT * FROM globals WHERE is_volatile
 | name        | Text    | Global variable name              |
 | type        | Text    | Global variable type literal      |
 | is_volatile | Boolean | True if variable type is volatile |
+| file        | Text    | File path                         |
+| line        | Integer | Line at the file path             |
+| column      | Integer | Column at the file path           |
+| offset      | Integer | Offset at the file path           |
 
 ---
 

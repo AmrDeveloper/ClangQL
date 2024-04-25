@@ -20,6 +20,12 @@ lazy_static! {
         map.insert("access_modifier", DataType::Integer);
         map.insert("is_variadic", DataType::Boolean);
         map.insert("is_volatile", DataType::Boolean);
+
+        // Source code location columns
+        map.insert("file", DataType::Text);
+        map.insert("line", DataType::Integer);
+        map.insert("column", DataType::Integer);
+        map.insert("offset", DataType::Integer);
         map
     };
 }
@@ -43,9 +49,24 @@ lazy_static! {
                 "has_template",
                 "access_modifier",
                 "is_variadic",
+                "file",
+                "line",
+                "column",
+                "offset",
             ],
         );
-        map.insert("globals", vec!["name", "type", "is_volatile"]);
+        map.insert(
+            "globals",
+            vec![
+                "name",
+                "type",
+                "is_volatile",
+                "file",
+                "line",
+                "column",
+                "offset",
+            ],
+        );
         map
     };
 }

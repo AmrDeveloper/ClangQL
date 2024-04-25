@@ -10,7 +10,7 @@ use gitql_engine::data_provider::DataProvider;
 use gitql_engine::engine_evaluator::evaluate_expression;
 
 use crate::visitor::function;
-use crate::visitor::globals;
+use crate::visitor::global;
 
 pub struct ClangAstDataProvider {
     pub paths: Vec<String>,
@@ -168,6 +168,26 @@ fn select_functions(
                 continue;
             }
 
+            if field_name == "file" {
+                values.push(Value::Text(function.location.file.to_string()));
+                continue;
+            }
+
+            if field_name == "line" {
+                values.push(Value::Integer(function.location.line as i64));
+                continue;
+            }
+
+            if field_name == "column" {
+                values.push(Value::Integer(function.location.column as i64));
+                continue;
+            }
+
+            if field_name == "offset" {
+                values.push(Value::Integer(function.location.offset as i64));
+                continue;
+            }
+
             values.push(Value::Null);
         }
 
@@ -191,7 +211,7 @@ fn select_variables(
     let values_len = fields_values.len() as i64;
     let padding = names_len - values_len;
 
-    let ast_variables = globals::select_clang_variables(path);
+    let ast_variables = global::select_clang_variables(path);
     for variable in ast_variables.iter() {
         let mut values: Vec<Value> = Vec::with_capacity(fields_names.len());
 
@@ -219,6 +239,26 @@ fn select_variables(
 
             if field_name == "is_volatile" {
                 values.push(Value::Boolean(variable.is_volatile));
+                continue;
+            }
+
+            if field_name == "file" {
+                values.push(Value::Text(variable.location.file.to_string()));
+                continue;
+            }
+
+            if field_name == "line" {
+                values.push(Value::Integer(variable.location.line as i64));
+                continue;
+            }
+
+            if field_name == "column" {
+                values.push(Value::Integer(variable.location.column as i64));
+                continue;
+            }
+
+            if field_name == "offset" {
+                values.push(Value::Integer(variable.location.offset as i64));
                 continue;
             }
 

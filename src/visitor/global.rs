@@ -6,10 +6,13 @@ use std::ffi::c_void;
 use std::ffi::CStr;
 use std::ptr;
 
+use crate::visitor::location;
+
 pub struct GlobalVariableNode {
     pub name: String,
     pub type_literal: String,
     pub is_volatile: bool,
+    pub location: location::SourceLocation,
 }
 
 pub fn select_clang_variables(path: &str) -> Vec<GlobalVariableNode> {
@@ -64,11 +67,13 @@ extern "C" fn visit_children(
                     .to_string_lossy();
 
             let is_volatile = clang_isVolatileQualifiedType(field_type) != 0;
+            let location = location::visit_source_location(cursor);
 
             variables.push(GlobalVariableNode {
                 name: field_name_str.to_string(),
                 type_literal: field_type_str.to_string(),
                 is_volatile,
+                location,
             });
 
             clang_disposeString(field_name);

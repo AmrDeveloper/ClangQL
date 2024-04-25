@@ -6,6 +6,8 @@ use std::ffi::c_void;
 use std::ffi::CStr;
 use std::ptr;
 
+use crate::visitor::location;
+
 pub struct FunctionNode {
     pub name: String,
     pub signature: String,
@@ -20,6 +22,7 @@ pub struct FunctionNode {
     pub has_template: bool,
     pub access_modifier: i32,
     pub is_variadic: bool,
+    pub location: location::SourceLocation,
 }
 
 pub fn select_clang_functions(path: &str) -> Vec<FunctionNode> {
@@ -108,6 +111,7 @@ extern "C" fn visit_children(
 
             let access_modifier = clang_getCXXAccessSpecifier(cursor);
             let is_variadic = clang_isFunctionTypeVariadic(function_type) != 0;
+            let location = location::visit_source_location(cursor);
 
             functions.push(FunctionNode {
                 name: name.to_string(),
@@ -123,6 +127,7 @@ extern "C" fn visit_children(
                 has_template,
                 access_modifier,
                 is_variadic,
+                location,
             });
 
             clang_disposeString(cursor_name);

@@ -1,2 +1,3 @@
 pub mod function;
-pub mod globals;
+pub mod global;
+pub mod location;
