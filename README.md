@@ -45,7 +45,7 @@ SELECT * FROM globals WHERE is_volatile
 
 | Name   | Type    | Description             |
 | ------ | ------- | ----------------------- |
-| name   | Text    | Global variable name    |
+| name   | Text    | Class variable name     |
 | file   | Text    | File path               |
 | line   | Integer | Line at the file path   |
 | column | Integer | Column at the file path |
