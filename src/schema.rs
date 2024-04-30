@@ -33,6 +33,7 @@ lazy_static! {
 lazy_static! {
     pub static ref TABLES_FIELDS_NAMES: HashMap<&'static str, Vec<&'static str>> = {
         let mut map = HashMap::new();
+        map.insert("classes", vec!["name", "line", "column", "offset"]);
         map.insert(
             "functions",
             vec![

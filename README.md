@@ -41,6 +41,16 @@ SELECT COUNT(name) from globals WHERE type = "int"
 SELECT * FROM globals WHERE is_volatile
 ```
 
+### Classes and Structs table structure
+
+| Name   | Type    | Description             |
+| ------ | ------- | ----------------------- |
+| name   | Text    | Global variable name    |
+| file   | Text    | File path               |
+| line   | Integer | Line at the file path   |
+| column | Integer | Column at the file path |
+| offset | Integer | Offset at the file path |
+
 ---
 
 ### Functions table structure
