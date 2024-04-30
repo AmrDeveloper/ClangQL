@@ -133,6 +133,7 @@ extern "C" fn visit_children(
             clang_disposeString(cursor_name);
             clang_disposeString(function_signature);
             clang_disposeString(result_type_spelling);
+            return CXChildVisit_Continue;
         }
     }
     CXChildVisit_Recurse
