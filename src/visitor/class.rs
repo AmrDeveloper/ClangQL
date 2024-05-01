@@ -53,7 +53,7 @@ extern "C" fn visit_children(
         }
 
         let cursor_kind = clang_getCursorKind(cursor);
-        if cursor_kind == CXCursor_ClassDecl {
+        if cursor_kind == CXCursor_ClassDecl || cursor_kind == CXCursor_StructDecl {
             let cursor_name = clang_getCursorSpelling(cursor);
             let class_name = CStr::from_ptr(clang_getCString(cursor_name)).to_string_lossy();
 
