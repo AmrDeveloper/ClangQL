@@ -10,6 +10,7 @@ use crate::visitor::location;
 
 pub struct ClassNode {
     pub name: String,
+    pub is_struct: bool,
     pub location: location::SourceLocation,
 }
 
@@ -60,8 +61,11 @@ extern "C" fn visit_children(
             let location = location::visit_source_location(cursor);
 
             let classes = &mut *(data as *mut Vec<ClassNode>);
+            let is_struct = cursor_kind == CXCursor_StructDecl;
+
             classes.push(ClassNode {
                 name: class_name.to_string(),
+                is_struct,
                 location,
             });
 

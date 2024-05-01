@@ -20,6 +20,7 @@ lazy_static! {
         map.insert("access_modifier", DataType::Integer);
         map.insert("is_variadic", DataType::Boolean);
         map.insert("is_volatile", DataType::Boolean);
+        map.insert("is_struct", DataType::Boolean);
 
         // Source code location columns
         map.insert("file", DataType::Text);
@@ -33,7 +34,10 @@ lazy_static! {
 lazy_static! {
     pub static ref TABLES_FIELDS_NAMES: HashMap<&'static str, Vec<&'static str>> = {
         let mut map = HashMap::new();
-        map.insert("classes", vec!["name", "line", "column", "offset"]);
+        map.insert(
+            "classes",
+            vec!["name", "is_struct", "line", "column", "offset"],
+        );
         map.insert(
             "functions",
             vec![

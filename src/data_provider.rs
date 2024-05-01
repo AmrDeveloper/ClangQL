@@ -109,6 +109,11 @@ fn select_classes(
                 continue;
             }
 
+            if field_name == "is_struct" {
+                values.push(Value::Boolean(class.is_struct));
+                continue;
+            }
+
             if field_name == "file" {
                 values.push(Value::Text(class.location.file.to_string()));
                 continue;
