@@ -10,8 +10,15 @@ use crate::visitor::location;
 
 pub struct ClassNode {
     pub name: String,
+    pub attributes: ClassAttributes,
     pub is_struct: bool,
     pub location: location::SourceLocation,
+}
+
+#[derive(Default)]
+pub struct ClassAttributes {
+    pub methods_count: u32,
+    pub fields_count: u32,
 }
 
 pub fn select_clang_classes(path: &str) -> Vec<ClassNode> {
@@ -31,7 +38,7 @@ pub fn select_clang_classes(path: &str) -> Vec<ClassNode> {
         );
 
         let cursor = clang_getTranslationUnitCursor(translation_unit);
-        clang_visitChildren(cursor, visit_children, data);
+        clang_visitChildren(cursor, visit_class_or_struct_declaration, data);
 
         // Dispose the translation unit
         clang_disposeTranslationUnit(translation_unit);
@@ -43,7 +50,7 @@ pub fn select_clang_classes(path: &str) -> Vec<ClassNode> {
     classes
 }
 
-extern "C" fn visit_children(
+extern "C" fn visit_class_or_struct_declaration(
     cursor: CXCursor,
     _parent: CXCursor,
     data: *mut c_void,
@@ -63,13 +70,44 @@ extern "C" fn visit_children(
             let classes = &mut *(data as *mut Vec<ClassNode>);
             let is_struct = cursor_kind == CXCursor_StructDecl;
 
+            let mut attributes = ClassAttributes::default();
+            let attributes_pointer = &mut attributes as *mut ClassAttributes as *mut c_void;
+            clang_visitChildren(cursor, visit_class_attributes, attributes_pointer);
+
             classes.push(ClassNode {
                 name: class_name.to_string(),
+                attributes,
                 is_struct,
                 location,
             });
 
             clang_disposeString(cursor_name);
+            return CXChildVisit_Continue;
+        }
+    }
+    CXChildVisit_Recurse
+}
+
+extern "C" fn visit_class_attributes(
+    cursor: CXCursor,
+    _parent: CXCursor,
+    data: *mut c_void,
+) -> CXChildVisitResult {
+    unsafe {
+        if clang_Location_isFromMainFile(clang_getCursorLocation(cursor)) == 0 {
+            return CXChildVisit_Continue;
+        }
+
+        let cursor_kind = clang_getCursorKind(cursor);
+        if cursor_kind == CXCursor_CXXMethod || cursor_kind == CXCursor_FunctionTemplate {
+            let attributes = &mut *(data as *mut ClassAttributes);
+            attributes.methods_count += 1;
+            return CXChildVisit_Continue;
+        }
+
+        if cursor_kind == CXCursor_FieldDecl {
+            let attributes = &mut *(data as *mut ClassAttributes);
+            attributes.fields_count += 1;
             return CXChildVisit_Continue;
         }
     }

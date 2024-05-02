@@ -109,6 +109,16 @@ fn select_classes(
                 continue;
             }
 
+            if field_name == "methods_count" {
+                values.push(Value::Integer(class.attributes.methods_count as i64));
+                continue;
+            }
+
+            if field_name == "fields_count" {
+                values.push(Value::Integer(class.attributes.fields_count as i64));
+                continue;
+            }
+
             if field_name == "is_struct" {
                 values.push(Value::Boolean(class.is_struct));
                 continue;

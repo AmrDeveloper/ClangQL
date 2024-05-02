@@ -22,6 +22,9 @@ lazy_static! {
         map.insert("is_volatile", DataType::Boolean);
         map.insert("is_struct", DataType::Boolean);
 
+        map.insert("methods_count", DataType::Integer);
+        map.insert("fields_count", DataType::Integer);
+
         // Source code location columns
         map.insert("file", DataType::Text);
         map.insert("line", DataType::Integer);
@@ -36,7 +39,15 @@ lazy_static! {
         let mut map = HashMap::new();
         map.insert(
             "classes",
-            vec!["name", "is_struct", "line", "column", "offset"],
+            vec![
+                "name",
+                "is_struct",
+                "methods_count",
+                "fields_count",
+                "line",
+                "column",
+                "offset",
+            ],
         );
         map.insert(
             "functions",
