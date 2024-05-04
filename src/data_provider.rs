@@ -109,13 +109,18 @@ fn select_classes(
                 continue;
             }
 
+            if field_name == "bases_count" {
+                values.push(Value::Integer(class.attributes.bases_count.into()));
+                continue;
+            }
+
             if field_name == "methods_count" {
-                values.push(Value::Integer(class.attributes.methods_count as i64));
+                values.push(Value::Integer(class.attributes.methods_count.into()));
                 continue;
             }
 
             if field_name == "fields_count" {
-                values.push(Value::Integer(class.attributes.fields_count as i64));
+                values.push(Value::Integer(class.attributes.fields_count.into()));
                 continue;
             }
 
@@ -130,17 +135,17 @@ fn select_classes(
             }
 
             if field_name == "line" {
-                values.push(Value::Integer(class.location.line as i64));
+                values.push(Value::Integer(class.location.line.into()));
                 continue;
             }
 
             if field_name == "column" {
-                values.push(Value::Integer(class.location.column as i64));
+                values.push(Value::Integer(class.location.column.into()));
                 continue;
             }
 
             if field_name == "offset" {
-                values.push(Value::Integer(class.location.offset as i64));
+                values.push(Value::Integer(class.location.offset.into()));
                 continue;
             }
 

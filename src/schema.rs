@@ -22,6 +22,7 @@ lazy_static! {
         map.insert("is_volatile", DataType::Boolean);
         map.insert("is_struct", DataType::Boolean);
 
+        map.insert("bases_count", DataType::Integer);
         map.insert("methods_count", DataType::Integer);
         map.insert("fields_count", DataType::Integer);
 
@@ -42,6 +43,7 @@ lazy_static! {
             vec![
                 "name",
                 "is_struct",
+                "bases_count",
                 "methods_count",
                 "fields_count",
                 "line",

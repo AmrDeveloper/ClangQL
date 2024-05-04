@@ -17,6 +17,7 @@ pub struct ClassNode {
 
 #[derive(Default)]
 pub struct ClassAttributes {
+    pub bases_count: u32,
     pub methods_count: u32,
     pub fields_count: u32,
 }
@@ -99,6 +100,13 @@ extern "C" fn visit_class_attributes(
         }
 
         let cursor_kind = clang_getCursorKind(cursor);
+
+        if cursor_kind == CXCursor_CXXBaseSpecifier {
+            let attributes = &mut *(data as *mut ClassAttributes);
+            attributes.bases_count += 1;
+            return CXChildVisit_Continue;
+        }
+
         if cursor_kind == CXCursor_CXXMethod || cursor_kind == CXCursor_FunctionTemplate {
             let attributes = &mut *(data as *mut ClassAttributes);
             attributes.methods_count += 1;

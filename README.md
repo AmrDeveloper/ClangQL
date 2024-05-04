@@ -47,6 +47,7 @@ SELECT * FROM globals WHERE is_volatile
 | ------------- | ------- | ------------------------------- |
 | name          | Text    | Class variable name             |
 | is_struct     | Boolean | True if it a struct declaration |
+| bases_count   | Integer | Number of bases for this class  |
 | methods_count | Integer | Number of methods declarations  |
 | fields_count  | Integer | Number of fields declarations   |
 | file          | Text    | File path                       |
