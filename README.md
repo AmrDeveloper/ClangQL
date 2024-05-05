@@ -57,6 +57,19 @@ SELECT * FROM globals WHERE is_volatile
 
 ---
 
+### Enums table structure
+
+| Name            | Type    | Description                      |
+| --------------- | ------- | -------------------------------- |
+| name            | Text    | Enumeration name                 |
+| constants_count | Integer | Number of constants in this enum |
+| file            | Text    | File path                        |
+| line            | Integer | Line at the file path            |
+| column          | Integer | Column at the file path          |
+| offset          | Integer | Offset at the file path          |
+
+---
+
 ### Functions table structure
 
 | Name            | Type    | Description                                                                                                                                                         |
