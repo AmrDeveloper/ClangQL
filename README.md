@@ -41,70 +41,89 @@ SELECT COUNT(name) from globals WHERE type = "int"
 SELECT * FROM globals WHERE is_volatile
 ```
 
-### Classes and Structs table structure
+### Tables structures
 
-| Name          | Type    | Description                     |
-| ------------- | ------- | ------------------------------- |
-| name          | Text    | Class variable name             |
-| is_struct     | Boolean | True if it a struct declaration |
-| bases_count   | Integer | Number of bases for this class  |
-| methods_count | Integer | Number of methods declarations  |
-| fields_count  | Integer | Number of fields declarations   |
-| file          | Text    | File path                       |
-| line          | Integer | Line at the file path           |
-| column        | Integer | Column at the file path         |
-| offset        | Integer | Offset at the file path         |
+<details>
 
----
+  <summary>Classes table</summary>
 
-### Enums table structure
+  | Name          | Type    | Description                     |
+  | ------------- | ------- | ------------------------------- |
+  | name          | Text    | Class variable name             |
+  | is_struct     | Boolean | True if it a struct declaration |
+  | bases_count   | Integer | Number of bases for this class  |
+  | methods_count | Integer | Number of methods declarations  |
+  | fields_count  | Integer | Number of fields declarations   |
+  | file          | Text    | File path                       |
+  | line          | Integer | Line at the file path           |
+  | column        | Integer | Column at the file path         |
+  | offset        | Integer | Offset at the file path         |
 
-| Name            | Type    | Description                      |
-| --------------- | ------- | -------------------------------- |
-| name            | Text    | Enumeration name                 |
-| constants_count | Integer | Number of constants in this enum |
-| file            | Text    | File path                        |
-| line            | Integer | Line at the file path            |
-| column          | Integer | Column at the file path          |
-| offset          | Integer | Offset at the file path          |
+</details>
 
 ---
 
-### Functions table structure
+<details>
 
-| Name            | Type    | Description                                                                                                                                                         |
-| --------------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| name            | Text    | Function or Method name                                                                                                                                             |
-| signature       | Text    | Parameters and return type literal                                                                                                                                  |
-| args_count      | Integer | Number of arguments                                                                                                                                                 |
-| class_name      | Text    | Return class name for method                                                                                                                                        |
-| return_type     | Text    | Return type literal                                                                                                                                                 |
-| is_method       | Boolean | True if it's a method                                                                                                                                               |
-| is_virtual      | Boolean | Return true if a C++ member function or member function template is  explicitly declared 'virtual' or if it overrides a virtual method from one of the base classes |
-| is_pure_virtual | Boolean | Return ture if a C++ member function or member function template is pure virtual                                                                                    |
-| is_static       | Boolean | Return ture if a C++ member function is static                                                                                                                      |
-| is_const        | Boolean | Return ture if a C++ member function is const                                                                                                                       |
-| has_template    | Boolean | True if it's has template                                                                                                                                           |
-| access_modifier | Integer | Returns the access control level for method, 1 for public, 2 protected, 3 provide, 0 for invalid                                                                    |
-| is_variadic     | Boolean | True if function type is variadic                                                                                                                                   |
-| file            | Text    | File path                                                                                                                                                           |
-| line            | Integer | Line at the file path                                                                                                                                               |
-| column          | Integer | Column at the file path                                                                                                                                             |
-| offset          | Integer | Offset at the file path                                                                                                                                             |
+  <summary>Enums table</summary>
+
+  | Name            | Type    | Description                      |
+  | --------------- | ------- | -------------------------------- |
+  | name            | Text    | Enumeration name                 |
+  | constants_count | Integer | Number of constants in this enum |
+  | file            | Text    | File path                        |
+  | line            | Integer | Line at the file path            |
+  | column          | Integer | Column at the file path          |
+  | offset          | Integer | Offset at the file path          |
+
+</details>
 
 ---
 
-### Gloal variables table structure
+<details>
 
-| Name        | Type    | Description                       |
-| ----------- | ------- | --------------------------------- |
-| name        | Text    | Global variable name              |
-| type        | Text    | Global variable type literal      |
-| is_volatile | Boolean | True if variable type is volatile |
-| file        | Text    | File path                         |
-| line        | Integer | Line at the file path             |
-| column      | Integer | Column at the file path           |
-| offset      | Integer | Offset at the file path           |
+  <summary>Functions table</summary>
+
+  | Name            | Type    | Description                                                                                                                                                         |
+  | --------------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+  | name            | Text    | Function or Method name                                                                                                                                             |
+  | signature       | Text    | Parameters and return type literal                                                                                                                                  |
+  | args_count      | Integer | Number of arguments                                                                                                                                                 |
+  | class_name      | Text    | Return class name for method                                                                                                                                        |
+  | return_type     | Text    | Return type literal                                                                                                                                                 |
+  | is_method       | Boolean | True if it's a method                                                                                                                                               |
+  | is_virtual      | Boolean | Return true if a C++ member function or member function template is  explicitly declared 'virtual' or if it overrides a virtual method from one of the base classes |
+  | is_pure_virtual | Boolean | Return ture if a C++ member function or member function template is pure virtual                                                                                    |
+  | is_static       | Boolean | Return ture if a C++ member function is static                                                                                                                      |
+  | is_const        | Boolean | Return ture if a C++ member function is const                                                                                                                       |
+  | has_template    | Boolean | True if it's has template                                                                                                                                           |
+  | access_modifier | Integer | Returns the access control level for method, 1 for public, 2 protected, 3 provide, 0 for invalid                                                                    |
+  | is_variadic     | Boolean | True if function type is variadic                                                                                                                                   |
+  | file            | Text    | File path                                                                                                                                                           |
+  | line            | Integer | Line at the file path                                                                                                                                               |
+  | column          | Integer | Column at the file path                                                                                                                                             |
+  | offset          | Integer | Offset at the file path                                                                                                                                             |
+
+</details>
+
+---
+
+<details>
+
+  <summary>Globals table</summary>
+
+  | Name        | Type    | Description                       |
+  | ----------- | ------- | --------------------------------- |
+  | name        | Text    | Global variable name              |
+  | type        | Text    | Global variable type literal      |
+  | is_volatile | Boolean | True if variable type is volatile |
+  | file        | Text    | File path                         |
+  | line        | Integer | Line at the file path             |
+  | column      | Integer | Column at the file path           |
+  | offset      | Integer | Offset at the file path           |
+
+</details>
+
 
 ---
 
