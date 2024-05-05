@@ -25,6 +25,7 @@ lazy_static! {
         map.insert("bases_count", DataType::Integer);
         map.insert("methods_count", DataType::Integer);
         map.insert("fields_count", DataType::Integer);
+        map.insert("constants_count", DataType::Integer);
 
         // Source code location columns
         map.insert("file", DataType::Text);
@@ -50,6 +51,10 @@ lazy_static! {
                 "column",
                 "offset",
             ],
+        );
+        map.insert(
+            "enums",
+            vec!["name", "constants_count", "line", "column", "offset"],
         );
         map.insert(
             "functions",
