@@ -8,20 +8,24 @@ lazy_static! {
         map.insert("name", DataType::Text);
         map.insert("type", DataType::Text);
         map.insert("signature", DataType::Text);
-        map.insert("args_count", DataType::Integer);
-        map.insert("return_type", DataType::Text);
         map.insert("class_name", DataType::Text);
+
+        map.insert("access_modifier", DataType::Integer);
+
         map.insert("is_method", DataType::Boolean);
         map.insert("is_virtual", DataType::Boolean);
         map.insert("is_pure_virtual", DataType::Boolean);
         map.insert("is_static", DataType::Boolean);
         map.insert("is_const", DataType::Boolean);
-        map.insert("has_template", DataType::Boolean);
-        map.insert("access_modifier", DataType::Integer);
         map.insert("is_variadic", DataType::Boolean);
         map.insert("is_volatile", DataType::Boolean);
         map.insert("is_struct", DataType::Boolean);
+        map.insert("has_template", DataType::Boolean);
 
+        map.insert("return_type", DataType::Text);
+        map.insert("type_literal", DataType::Text);
+
+        map.insert("args_count", DataType::Integer);
         map.insert("bases_count", DataType::Integer);
         map.insert("methods_count", DataType::Integer);
         map.insert("fields_count", DataType::Integer);
@@ -54,7 +58,14 @@ lazy_static! {
         );
         map.insert(
             "enums",
-            vec!["name", "constants_count", "line", "column", "offset"],
+            vec![
+                "name",
+                "constants_count",
+                "type_literal",
+                "line",
+                "column",
+                "offset",
+            ],
         );
         map.insert(
             "functions",

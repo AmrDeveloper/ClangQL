@@ -71,6 +71,7 @@ SELECT * FROM globals WHERE is_volatile
   | --------------- | ------- | -------------------------------- |
   | name            | Text    | Enumeration name                 |
   | constants_count | Integer | Number of constants in this enum |
+  | type_literal    | Text    | Type literal for enum constants  |
   | file            | Text    | File path                        |
   | line            | Integer | Line at the file path            |
   | column          | Integer | Column at the file path          |

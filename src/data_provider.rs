@@ -202,6 +202,11 @@ fn select_enumss(
                 continue;
             }
 
+            if field_name == "type_literal" {
+                values.push(Value::Text(enumeration.type_literal.to_string()));
+                continue;
+            }
+
             if field_name == "file" {
                 values.push(Value::Text(enumeration.location.file.to_string()));
                 continue;
