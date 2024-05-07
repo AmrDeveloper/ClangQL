@@ -12,6 +12,7 @@ pub struct ClassNode {
     pub name: String,
     pub attributes: ClassAttributes,
     pub is_struct: bool,
+    pub size_of: i64,
     pub location: location::SourceLocation,
 }
 
@@ -71,6 +72,9 @@ extern "C" fn visit_class_or_struct_declaration(
             let classes = &mut *(data as *mut Vec<ClassNode>);
             let is_struct = cursor_kind == CXCursor_StructDecl;
 
+            let class_type = clang_getCursorType(cursor);
+            let size_of = clang_Type_getSizeOf(class_type) / 8;
+
             let mut attributes = ClassAttributes::default();
             let attributes_pointer = &mut attributes as *mut ClassAttributes as *mut c_void;
             clang_visitChildren(cursor, visit_class_attributes, attributes_pointer);
@@ -79,6 +83,7 @@ extern "C" fn visit_class_or_struct_declaration(
                 name: class_name.to_string(),
                 attributes,
                 is_struct,
+                size_of,
                 location,
             });
 

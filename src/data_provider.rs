@@ -131,6 +131,11 @@ fn select_classes(
                 continue;
             }
 
+            if field_name == "size_of" {
+                values.push(Value::Integer(class.size_of));
+                continue;
+            }
+
             if field_name == "file" {
                 values.push(Value::Text(class.location.file.to_string()));
                 continue;
