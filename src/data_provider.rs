@@ -131,8 +131,13 @@ fn select_classes(
                 continue;
             }
 
-            if field_name == "size_of" {
-                values.push(Value::Integer(class.size_of));
+            if field_name == "size" {
+                values.push(Value::Integer(class.size));
+                continue;
+            }
+
+            if field_name == "align" {
+                values.push(Value::Integer(class.align));
                 continue;
             }
 

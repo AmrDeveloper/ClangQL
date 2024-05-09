@@ -54,7 +54,8 @@ SELECT * FROM globals WHERE is_volatile
   | bases_count   | Integer | Number of bases for this class  |
   | methods_count | Integer | Number of methods declarations  |
   | fields_count  | Integer | Number of fields declarations   |
-  | size_of       | Integer | Class Size in bytes             |
+  | size          | Integer | The size of class in bytes      |
+  | align         | Integer | The align of class in bytes     |
   | file          | Text    | File path                       |
   | line          | Integer | Line at the file path           |
   | column        | Integer | Column at the file path         |

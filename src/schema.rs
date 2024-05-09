@@ -31,7 +31,8 @@ lazy_static! {
         map.insert("fields_count", DataType::Integer);
         map.insert("constants_count", DataType::Integer);
 
-        map.insert("size_of", DataType::Integer);
+        map.insert("size", DataType::Integer);
+        map.insert("align", DataType::Integer);
 
         // Source code location columns
         map.insert("file", DataType::Text);
@@ -53,7 +54,8 @@ lazy_static! {
                 "bases_count",
                 "methods_count",
                 "fields_count",
-                "size_of",
+                "size",
+                "align",
                 "line",
                 "column",
                 "offset",

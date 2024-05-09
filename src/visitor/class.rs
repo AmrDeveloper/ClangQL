@@ -12,7 +12,8 @@ pub struct ClassNode {
     pub name: String,
     pub attributes: ClassAttributes,
     pub is_struct: bool,
-    pub size_of: i64,
+    pub size: i64,
+    pub align: i64,
     pub location: location::SourceLocation,
 }
 
@@ -73,7 +74,8 @@ extern "C" fn visit_class_or_struct_declaration(
             let is_struct = cursor_kind == CXCursor_StructDecl;
 
             let class_type = clang_getCursorType(cursor);
-            let size_of = clang_Type_getSizeOf(class_type) / 8;
+            let size = clang_Type_getSizeOf(class_type) / 8;
+            let align = clang_Type_getAlignOf(class_type) / 8;
 
             let mut attributes = ClassAttributes::default();
             let attributes_pointer = &mut attributes as *mut ClassAttributes as *mut c_void;
@@ -83,7 +85,8 @@ extern "C" fn visit_class_or_struct_declaration(
                 name: class_name.to_string(),
                 attributes,
                 is_struct,
-                size_of,
+                size,
+                align,
                 location,
             });
 
