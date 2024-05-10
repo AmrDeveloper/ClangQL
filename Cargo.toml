@@ -1,7 +1,7 @@
 [package]
 name = "clangql"
 authors = ["AmrDeveloper"]
-version = "0.2.0"
+version = "0.3.0"
 edition = "2021"
 description = "A tool to run SQL-like query on your C/C++ Abstract syntax tree"
 license = "MIT"
