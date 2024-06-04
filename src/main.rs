@@ -5,17 +5,21 @@ use arguments::Arguments;
 use arguments::Command;
 use atty::Stream;
 use data_provider::ClangAstDataProvider;
-use gitql_ast::environment::Environment;
-use gitql_ast::schema::Schema;
 use gitql_cli::arguments::OutputFormat;
 use gitql_cli::diagnostic_reporter;
 use gitql_cli::diagnostic_reporter::DiagnosticReporter;
 use gitql_cli::render;
+use gitql_core::environment::Environment;
+use gitql_core::schema::Schema;
 use gitql_engine::data_provider::DataProvider;
 use gitql_engine::engine;
 use gitql_parser::diagnostic::Diagnostic;
 use gitql_parser::parser;
 use gitql_parser::tokenizer;
+use gitql_std::aggregation::aggregation_function_signatures;
+use gitql_std::aggregation::aggregation_functions;
+use gitql_std::function::standard_function_signatures;
+use gitql_std::function::standard_functions;
 use schema::TABLES_FIELDS_NAMES;
 use schema::TABLES_FIELDS_TYPES;
 
@@ -45,7 +49,17 @@ fn main() {
                 tables_fields_names: TABLES_FIELDS_NAMES.to_owned(),
                 tables_fields_types: TABLES_FIELDS_TYPES.to_owned(),
             };
+
+            let std_signatures = standard_function_signatures();
+            let std_functions = standard_functions();
+
+            let aggregation_signatures = aggregation_function_signatures();
+            let aggregation_functions = aggregation_functions();
+
             let mut env = Environment::new(schema);
+            env.with_standard_functions(std_signatures, std_functions);
+            env.with_aggregation_functions(aggregation_signatures, aggregation_functions);
+
             execute_clangql_query(query, &arguments, files, &mut env, &mut reporter);
         }
         Command::Help => {
@@ -73,7 +87,15 @@ fn launch_clangql_repl(arguments: Arguments) {
         tables_fields_types: TABLES_FIELDS_TYPES.to_owned(),
     };
 
+    let std_signatures = standard_function_signatures();
+    let std_functions = standard_functions();
+
+    let aggregation_signatures = aggregation_function_signatures();
+    let aggregation_functions = aggregation_functions();
+
     let mut global_env = Environment::new(schema);
+    global_env.with_standard_functions(std_signatures, std_functions);
+    global_env.with_aggregation_functions(aggregation_signatures, aggregation_functions);
 
     let mut input = String::new();
 
