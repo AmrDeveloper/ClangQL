@@ -20,8 +20,8 @@ use gitql_std::aggregation::aggregation_function_signatures;
 use gitql_std::aggregation::aggregation_functions;
 use gitql_std::function::standard_function_signatures;
 use gitql_std::function::standard_functions;
-use schema::TABLES_FIELDS_NAMES;
-use schema::TABLES_FIELDS_TYPES;
+use schema::tables_fields_names;
+use schema::tables_fields_types;
 
 mod arguments;
 mod data_provider;
@@ -45,9 +45,10 @@ fn main() {
                 reporter.report_diagnostic("", Diagnostic::error(error.as_str()));
                 return;
             }
+
             let schema = Schema {
-                tables_fields_names: TABLES_FIELDS_NAMES.to_owned(),
-                tables_fields_types: TABLES_FIELDS_TYPES.to_owned(),
+                tables_fields_names: tables_fields_names().to_owned(),
+                tables_fields_types: tables_fields_types().to_owned(),
             };
 
             let std_signatures = standard_function_signatures();
@@ -83,8 +84,8 @@ fn launch_clangql_repl(arguments: Arguments) {
     }
 
     let schema = Schema {
-        tables_fields_names: TABLES_FIELDS_NAMES.to_owned(),
-        tables_fields_types: TABLES_FIELDS_TYPES.to_owned(),
+        tables_fields_names: tables_fields_names().to_owned(),
+        tables_fields_types: tables_fields_types().to_owned(),
     };
 
     let std_signatures = standard_function_signatures();

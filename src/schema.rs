@@ -1,9 +1,10 @@
 use gitql_core::types::DataType;
-use lazy_static::lazy_static;
 use std::collections::HashMap;
+use std::sync::OnceLock;
 
-lazy_static! {
-    pub static ref TABLES_FIELDS_TYPES: HashMap<&'static str, DataType> = {
+pub fn tables_fields_types() -> &'static HashMap<&'static str, DataType> {
+    static HASHMAP: OnceLock<HashMap<&'static str, DataType>> = OnceLock::new();
+    HASHMAP.get_or_init(|| {
         let mut map = HashMap::new();
         map.insert("name", DataType::Text);
         map.insert("type", DataType::Text);
@@ -40,11 +41,12 @@ lazy_static! {
         map.insert("column", DataType::Integer);
         map.insert("offset", DataType::Integer);
         map
-    };
+    })
 }
 
-lazy_static! {
-    pub static ref TABLES_FIELDS_NAMES: HashMap<&'static str, Vec<&'static str>> = {
+pub fn tables_fields_names() -> &'static HashMap<&'static str, Vec<&'static str>> {
+    static HASHMAP: OnceLock<HashMap<&'static str, Vec<&'static str>>> = OnceLock::new();
+    HASHMAP.get_or_init(|| {
         let mut map = HashMap::new();
         map.insert(
             "classes",
@@ -107,5 +109,5 @@ lazy_static! {
             ],
         );
         map
-    };
+    })
 }

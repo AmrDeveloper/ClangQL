@@ -109,7 +109,6 @@ dependencies = [
  "gitql-engine",
  "gitql-parser",
  "gitql-std",
- "lazy_static",
 ]
 
 [[package]]
@@ -310,12 +309,6 @@ checksum = "29c15563dc2726973df627357ce0c9ddddbea194836909d655df6a75d2cf296d"
 dependencies = [
  "wasm-bindgen",
 ]
-
-[[package]]
-name = "lazy_static"
-version = "1.4.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e2abad23fbc42b3700f2f279844dc832adb2b2eb069b2df918f455c4e18cc646"
 
 [[package]]
 name = "libc"
