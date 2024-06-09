@@ -31,32 +31,30 @@ impl DataProvider for ClangAstDataProvider {
         fields_names: &[String],
         titles: &[String],
         fields_values: &[Box<dyn Expression>],
-    ) -> GitQLObject {
+    ) -> Result<GitQLObject, String> {
         let mut groups: Vec<Group> = vec![];
 
         for path in &self.paths {
-            let selected_group = select_clang_ast_objects(
+            let mut selected_group = select_clang_ast_objects(
                 env,
                 path,
                 table.to_string(),
                 fields_names,
                 titles,
                 fields_values,
-            );
+            )?;
 
-            if let Ok(mut group) = selected_group {
-                if groups.is_empty() {
-                    groups.push(group);
-                } else {
-                    groups[0].rows.append(&mut group.rows);
-                }
+            if groups.is_empty() {
+                groups.push(selected_group);
+            } else {
+                groups[0].rows.append(&mut selected_group.rows);
             }
         }
 
-        GitQLObject {
+        Ok(GitQLObject {
             titles: titles.to_vec(),
             groups,
-        }
+        })
     }
 }
 
