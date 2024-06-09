@@ -13,6 +13,7 @@ use crate::visitor::class;
 use crate::visitor::enumeration;
 use crate::visitor::function;
 use crate::visitor::global;
+use crate::visitor::unions;
 pub struct ClangAstDataProvider {
     pub paths: Vec<String>,
 }
@@ -69,6 +70,7 @@ fn select_clang_ast_objects(
     match table.as_str() {
         "classes" => select_classes(env, path, fields_names, titles, fields_values),
         "enums" => select_enumss(env, path, fields_names, titles, fields_values),
+        "unions" => select_unions(env, path, fields_names, titles, fields_values),
         "functions" => select_functions(env, path, fields_names, titles, fields_values),
         "globals" => select_variables(env, path, fields_names, titles, fields_values),
         _ => select_values(env, titles, fields_values),
@@ -232,6 +234,70 @@ fn select_enumss(
 
             if field_name == "offset" {
                 values.push(Value::Integer(enumeration.location.offset.into()));
+                continue;
+            }
+
+            values.push(Value::Null);
+        }
+
+        let row = Row { values };
+        rows.push(row);
+    }
+
+    Ok(Group { rows })
+}
+
+fn select_unions(
+    env: &mut Environment,
+    path: &str,
+    fields_names: &[String],
+    titles: &[String],
+    fields_values: &[Box<dyn Expression>],
+) -> Result<Group, String> {
+    let mut rows: Vec<Row> = vec![];
+
+    let names_len = fields_names.len() as i64;
+    let values_len = fields_values.len() as i64;
+    let padding = names_len - values_len;
+
+    let ast_unions = unions::select_clang_unions(path);
+    for union_node in ast_unions.iter() {
+        let mut values: Vec<Value> = Vec::with_capacity(fields_names.len());
+
+        for index in 0..names_len {
+            let field_name = &fields_names[index as usize];
+
+            if (index - padding) >= 0 {
+                let value = &fields_values[(index - padding) as usize];
+                if value.as_any().downcast_ref::<SymbolExpression>().is_none() {
+                    let evaluated = evaluate_expression(env, value, titles, &values)?;
+                    values.push(evaluated);
+                    continue;
+                }
+            }
+
+            if field_name == "name" {
+                values.push(Value::Text(union_node.name.to_owned()));
+                continue;
+            }
+
+            if field_name == "file" {
+                values.push(Value::Text(union_node.location.file.to_string()));
+                continue;
+            }
+
+            if field_name == "line" {
+                values.push(Value::Integer(union_node.location.line.into()));
+                continue;
+            }
+
+            if field_name == "column" {
+                values.push(Value::Integer(union_node.location.column.into()));
+                continue;
+            }
+
+            if field_name == "offset" {
+                values.push(Value::Integer(union_node.location.offset.into()));
                 continue;
             }
 

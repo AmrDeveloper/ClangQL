@@ -85,6 +85,22 @@ SELECT * FROM globals WHERE is_volatile
 
 <details>
 
+  <summary>Unions table</summary>
+
+  | Name   | Type    | Description             |
+  | ------ | ------- | ----------------------- |
+  | name   | Text    | Union name              |
+  | file   | Text    | File path               |
+  | line   | Integer | Line at the file path   |
+  | column | Integer | Column at the file path |
+  | offset | Integer | Offset at the file path |
+
+</details>
+
+---
+
+<details>
+
   <summary>Functions table</summary>
 
   | Name            | Type    | Description                                                                                                                                                         |
