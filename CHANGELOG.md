@@ -1,6 +1,18 @@
 Change Log
 ==========
 
+Version 0.5.0 *(2024-06-12)*
+-----------------------------
+
+* Migrate GitQL SDK to 0.22.0
+* Support query `name` and `location` of union.
+
+Version 0.4.0 *(2024-06-08)*
+-----------------------------
+
+* Migrate GitQL SDK to 0.20.0
+* Remove lazy_static crate
+
 Version 0.3.0 *(2024-05-10)*
 -----------------------------
 
