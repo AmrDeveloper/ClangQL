@@ -87,14 +87,15 @@ SELECT * FROM globals WHERE is_volatile
 
   <summary>Unions table</summary>
 
-  | Name   | Type    | Description               |
-  | ------ | ------- | ------------------------- |
-  | name   | Text    | Union name                |
-  | size   | Integer | The size of union in bits |
-  | file   | Text    | File path                 |
-  | line   | Integer | Line at the file path     |
-  | column | Integer | Column at the file path   |
-  | offset | Integer | Offset at the file path   |
+  | Name         | Type    | Description                   |
+  | ------------ | ------- | ----------------------------- |
+  | name         | Text    | Union name                    |
+  | size         | Integer | The size of union in bits     |
+  | fields_count | Integer | Number of fields declarations |
+  | file         | Text    | File path                     |
+  | line         | Integer | Line at the file path         |
+  | column       | Integer | Column at the file path       |
+  | offset       | Integer | Offset at the file path       |
 
 </details>
 

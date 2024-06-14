@@ -77,7 +77,15 @@ pub fn tables_fields_names() -> &'static HashMap<&'static str, Vec<&'static str>
         );
         map.insert(
             "unions",
-            vec!["name", "size", "file", "line", "column", "offset"],
+            vec![
+                "name",
+                "fields_count",
+                "size",
+                "file",
+                "line",
+                "column",
+                "offset",
+            ],
         );
         map.insert(
             "functions",

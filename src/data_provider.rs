@@ -322,6 +322,11 @@ fn select_unions(
                 continue;
             }
 
+            if field_name == "fields_count" {
+                values.push(Value::Integer(union_node.attributes.fields_count.into()));
+                continue;
+            }
+
             if field_name == "size" {
                 values.push(Value::Integer(union_node.size));
                 continue;
