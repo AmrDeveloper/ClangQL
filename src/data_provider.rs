@@ -32,6 +32,7 @@ impl DataProvider for ClangAstDataProvider {
         fields_names: &[String],
         titles: &[String],
         fields_values: &[Box<dyn Expression>],
+        hidden_selection_count: i64,
     ) -> Result<GitQLObject, String> {
         let mut groups: Vec<Group> = vec![];
 
@@ -43,6 +44,7 @@ impl DataProvider for ClangAstDataProvider {
                 fields_names,
                 titles,
                 fields_values,
+                hidden_selection_count,
             )?;
 
             if groups.is_empty() {
@@ -66,13 +68,49 @@ fn select_clang_ast_objects(
     fields_names: &[String],
     titles: &[String],
     fields_values: &[Box<dyn Expression>],
+    hidden_selection_count: i64,
 ) -> Result<Group, String> {
     match table.as_str() {
-        "classes" => select_classes(env, path, fields_names, titles, fields_values),
-        "enums" => select_enumss(env, path, fields_names, titles, fields_values),
-        "unions" => select_unions(env, path, fields_names, titles, fields_values),
-        "functions" => select_functions(env, path, fields_names, titles, fields_values),
-        "globals" => select_variables(env, path, fields_names, titles, fields_values),
+        "classes" => select_classes(
+            env,
+            path,
+            fields_names,
+            titles,
+            fields_values,
+            hidden_selection_count,
+        ),
+        "enums" => select_enumss(
+            env,
+            path,
+            fields_names,
+            titles,
+            fields_values,
+            hidden_selection_count,
+        ),
+        "unions" => select_unions(
+            env,
+            path,
+            fields_names,
+            titles,
+            fields_values,
+            hidden_selection_count,
+        ),
+        "functions" => select_functions(
+            env,
+            path,
+            fields_names,
+            titles,
+            fields_values,
+            hidden_selection_count,
+        ),
+        "globals" => select_variables(
+            env,
+            path,
+            fields_names,
+            titles,
+            fields_values,
+            hidden_selection_count,
+        ),
         _ => select_values(env, titles, fields_values),
     }
 }
@@ -83,6 +121,7 @@ fn select_classes(
     fields_names: &[String],
     titles: &[String],
     fields_values: &[Box<dyn Expression>],
+    hidden_selection_count: i64,
 ) -> Result<Group, String> {
     let mut rows: Vec<Row> = vec![];
 
@@ -95,9 +134,7 @@ fn select_classes(
         let mut values: Vec<Value> = Vec::with_capacity(fields_names.len());
 
         for index in 0..names_len {
-            let field_name = &fields_names[index as usize];
-
-            if (index - padding) >= 0 {
+            if index >= hidden_selection_count && (index - padding) >= 0 {
                 let value = &fields_values[(index - padding) as usize];
                 if value.as_any().downcast_ref::<SymbolExpression>().is_none() {
                     let evaluated = evaluate_expression(env, value, titles, &values)?;
@@ -105,6 +142,8 @@ fn select_classes(
                     continue;
                 }
             }
+
+            let field_name = &fields_names[index as usize];
 
             if field_name == "name" {
                 values.push(Value::Text(class.name.to_owned()));
@@ -177,6 +216,7 @@ fn select_enumss(
     fields_names: &[String],
     titles: &[String],
     fields_values: &[Box<dyn Expression>],
+    hidden_selection_count: i64,
 ) -> Result<Group, String> {
     let mut rows: Vec<Row> = vec![];
 
@@ -189,9 +229,7 @@ fn select_enumss(
         let mut values: Vec<Value> = Vec::with_capacity(fields_names.len());
 
         for index in 0..names_len {
-            let field_name = &fields_names[index as usize];
-
-            if (index - padding) >= 0 {
+            if index >= hidden_selection_count && (index - padding) >= 0 {
                 let value = &fields_values[(index - padding) as usize];
                 if value.as_any().downcast_ref::<SymbolExpression>().is_none() {
                     let evaluated = evaluate_expression(env, value, titles, &values)?;
@@ -199,6 +237,8 @@ fn select_enumss(
                     continue;
                 }
             }
+
+            let field_name = &fields_names[index as usize];
 
             if field_name == "name" {
                 values.push(Value::Text(enumeration.name.to_owned()));
@@ -253,6 +293,7 @@ fn select_unions(
     fields_names: &[String],
     titles: &[String],
     fields_values: &[Box<dyn Expression>],
+    hidden_selection_count: i64,
 ) -> Result<Group, String> {
     let mut rows: Vec<Row> = vec![];
 
@@ -265,9 +306,7 @@ fn select_unions(
         let mut values: Vec<Value> = Vec::with_capacity(fields_names.len());
 
         for index in 0..names_len {
-            let field_name = &fields_names[index as usize];
-
-            if (index - padding) >= 0 {
+            if index >= hidden_selection_count && (index - padding) >= 0 {
                 let value = &fields_values[(index - padding) as usize];
                 if value.as_any().downcast_ref::<SymbolExpression>().is_none() {
                     let evaluated = evaluate_expression(env, value, titles, &values)?;
@@ -275,6 +314,8 @@ fn select_unions(
                     continue;
                 }
             }
+
+            let field_name = &fields_names[index as usize];
 
             if field_name == "name" {
                 values.push(Value::Text(union_node.name.to_owned()));
@@ -317,6 +358,7 @@ fn select_functions(
     fields_names: &[String],
     titles: &[String],
     fields_values: &[Box<dyn Expression>],
+    hidden_selection_count: i64,
 ) -> Result<Group, String> {
     let mut rows: Vec<Row> = vec![];
 
@@ -329,9 +371,7 @@ fn select_functions(
         let mut values: Vec<Value> = Vec::with_capacity(fields_names.len());
 
         for index in 0..names_len {
-            let field_name = &fields_names[index as usize];
-
-            if (index - padding) >= 0 {
+            if index >= hidden_selection_count && (index - padding) >= 0 {
                 let value = &fields_values[(index - padding) as usize];
                 if value.as_any().downcast_ref::<SymbolExpression>().is_none() {
                     let evaluated = evaluate_expression(env, value, titles, &values)?;
@@ -339,6 +379,8 @@ fn select_functions(
                     continue;
                 }
             }
+
+            let field_name = &fields_names[index as usize];
 
             if field_name == "name" {
                 values.push(Value::Text(function.name.to_owned()));
@@ -441,6 +483,7 @@ fn select_variables(
     fields_names: &[String],
     titles: &[String],
     fields_values: &[Box<dyn Expression>],
+    hidden_selection_count: i64,
 ) -> Result<Group, String> {
     let mut rows: Vec<Row> = vec![];
 
@@ -453,9 +496,7 @@ fn select_variables(
         let mut values: Vec<Value> = Vec::with_capacity(fields_names.len());
 
         for index in 0..names_len {
-            let field_name = &fields_names[index as usize];
-
-            if (index - padding) >= 0 {
+            if index >= hidden_selection_count && (index - padding) >= 0 {
                 let value = &fields_values[(index - padding) as usize];
                 if value.as_any().downcast_ref::<SymbolExpression>().is_none() {
                     let evaluated = evaluate_expression(env, value, titles, &values)?;
@@ -463,6 +504,8 @@ fn select_variables(
                     continue;
                 }
             }
+
+            let field_name = &fields_names[index as usize];
 
             if field_name == "name" {
                 values.push(Value::Text(variable.name.to_owned()));
