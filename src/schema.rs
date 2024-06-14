@@ -75,7 +75,10 @@ pub fn tables_fields_names() -> &'static HashMap<&'static str, Vec<&'static str>
                 "offset",
             ],
         );
-        map.insert("unions", vec!["name", "file", "line", "column", "offset"]);
+        map.insert(
+            "unions",
+            vec!["name", "size", "file", "line", "column", "offset"],
+        );
         map.insert(
             "functions",
             vec![

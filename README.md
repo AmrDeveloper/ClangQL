@@ -54,8 +54,8 @@ SELECT * FROM globals WHERE is_volatile
   | bases_count   | Integer | Number of bases for this class  |
   | methods_count | Integer | Number of methods declarations  |
   | fields_count  | Integer | Number of fields declarations   |
-  | size          | Integer | The size of class in bytes      |
-  | align         | Integer | The align of class in bytes     |
+  | size          | Integer | The size of class in bits       |
+  | align         | Integer | The align of class in bits      |
   | file          | Text    | File path                       |
   | line          | Integer | Line at the file path           |
   | column        | Integer | Column at the file path         |
@@ -87,13 +87,14 @@ SELECT * FROM globals WHERE is_volatile
 
   <summary>Unions table</summary>
 
-  | Name   | Type    | Description             |
-  | ------ | ------- | ----------------------- |
-  | name   | Text    | Union name              |
-  | file   | Text    | File path               |
-  | line   | Integer | Line at the file path   |
-  | column | Integer | Column at the file path |
-  | offset | Integer | Offset at the file path |
+  | Name   | Type    | Description               |
+  | ------ | ------- | ------------------------- |
+  | name   | Text    | Union name                |
+  | size   | Integer | The size of union in bits |
+  | file   | Text    | File path                 |
+  | line   | Integer | Line at the file path     |
+  | column | Integer | Column at the file path   |
+  | offset | Integer | Offset at the file path   |
 
 </details>
 

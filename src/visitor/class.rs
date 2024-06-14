@@ -74,8 +74,8 @@ extern "C" fn visit_class_or_struct_declaration(
             let is_struct = cursor_kind == CXCursor_StructDecl;
 
             let class_type = clang_getCursorType(cursor);
-            let size = clang_Type_getSizeOf(class_type) / 8;
-            let align = clang_Type_getAlignOf(class_type) / 8;
+            let size = clang_Type_getSizeOf(class_type);
+            let align = clang_Type_getAlignOf(class_type);
 
             let mut attributes = ClassAttributes::default();
             let attributes_pointer = &mut attributes as *mut ClassAttributes as *mut c_void;

@@ -9,6 +9,7 @@ use std::ptr;
 use crate::visitor::location;
 pub struct UnionNode {
     pub name: String,
+    pub size: i64,
     pub location: location::SourceLocation,
 }
 
@@ -57,9 +58,13 @@ extern "C" fn visit_union_declaration(
             let union_name = CStr::from_ptr(clang_getCString(cursor_name)).to_string_lossy();
             let location = location::visit_source_location(cursor);
 
+            let union_type = clang_getCursorType(cursor);
+            let size = clang_Type_getSizeOf(union_type);
+
             let unions: &mut Vec<UnionNode> = &mut *(data as *mut Vec<UnionNode>);
             unions.push(UnionNode {
                 name: union_name.to_string(),
+                size,
                 location,
             });
 

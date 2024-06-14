@@ -322,6 +322,11 @@ fn select_unions(
                 continue;
             }
 
+            if field_name == "size" {
+                values.push(Value::Integer(union_node.size));
+                continue;
+            }
+
             if field_name == "file" {
                 values.push(Value::Text(union_node.location.file.to_string()));
                 continue;
