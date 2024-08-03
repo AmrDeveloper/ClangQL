@@ -185,18 +185,18 @@ dependencies = [
 
 [[package]]
 name = "gitql-ast"
-version = "0.20.0"
+version = "0.22.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e7733d16dba9345ad7c0bff161c2edc693d50fda4bad076e08de01bab08f00d6"
+checksum = "4ca65aafff2176b5fb15f8631370426c0c8ddf905a213d8e8c0fa451bc41a836"
 dependencies = [
  "gitql-core",
 ]
 
 [[package]]
 name = "gitql-cli"
-version = "0.23.0"
+version = "0.25.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b7096b8cb3b721b63c25fdfd42e6ee7c382a20330aed935a291182bef1678664"
+checksum = "192a9ca3a4ee584a05f5c153b70c283479fc40283c4e1e1fbcae29bc7e9ce948"
 dependencies = [
  "comfy-table",
  "gitql-ast",
@@ -218,9 +218,9 @@ dependencies = [
 
 [[package]]
 name = "gitql-engine"
-version = "0.23.0"
+version = "0.25.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a0ffa7895eb8f7ee43c4f6e983c643b9d2c992973e348be9b24fe98f67c8079f"
+checksum = "31a3d05dda143d017af9551356db020f32c77aa72e326b6afc2f9de6dae1d6ad"
 dependencies = [
  "chrono",
  "gitql-ast",
@@ -230,9 +230,9 @@ dependencies = [
 
 [[package]]
 name = "gitql-parser"
-version = "0.22.0"
+version = "0.24.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "dd1db0b61e9d81772a4ad4e1403116065eb682e7ea0d0ec92e568d8513ffa637"
+checksum = "1b6f1d6b0a7ca30b2300620c7df8d0c6a2704d0e11ce370a1eff097370cc5aba"
 dependencies = [
  "gitql-ast",
  "gitql-core",
@@ -240,9 +240,9 @@ dependencies = [
 
 [[package]]
 name = "gitql-std"
-version = "0.2.0"
+version = "0.3.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "85c46f290131063003b957ed9683d52d181fd8f7f4bc1e59f25fed7fa2ebda80"
+checksum = "8e5dabeb99556f2bd098e05d85306679e4125323d7cfc2c7ec903f19687a1c96"
 dependencies = [
  "chrono",
  "gitql-core",

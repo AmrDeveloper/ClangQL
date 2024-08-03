@@ -14,10 +14,10 @@ exclude = [".github/**", "docs/**", "media/**", "scripts/**"]
 
 [dependencies]
 gitql-core = "0.2.0"
-gitql-std = "0.2.0"
-gitql-cli = "0.23.0"
-gitql-ast = "0.20.0"
-gitql-parser = "0.22.0"
-gitql-engine = "0.23.0"
+gitql-std = "0.3.0"
+gitql-cli = "0.25.0"
+gitql-ast = "0.22.0"
+gitql-parser = "0.24.0"
+gitql-engine = "0.25.0"
 atty = "0.2.14"
 clang-sys = "1.7.0"
