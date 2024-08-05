@@ -44,7 +44,7 @@ fn select_clang_ast_objects(
         "unions" => select_unions(path, selected_columns)?,
         "functions" => select_functions(path, selected_columns)?,
         "globals" => select_variables(path, selected_columns)?,
-        _ => vec![],
+        _ => vec![Row { values: vec![] }],
     };
     Ok(rows)
 }
