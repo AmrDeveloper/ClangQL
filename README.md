@@ -158,6 +158,12 @@ Note that Building from source or installing from Cargo.io requires LibClang 17 
 cargo install clangql
 ```
 
+- Install from Homebrew
+
+```
+brew install clangql
+```
+
 - Build from source code
 
 ```
