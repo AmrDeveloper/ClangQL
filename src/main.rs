@@ -1,9 +1,9 @@
+use std::io::IsTerminal;
 use std::path::Path;
 
 use crate::engine::EvaluationResult::SelectedGroups;
 use arguments::Arguments;
 use arguments::Command;
-use atty::Stream;
 use data_provider::ClangAstDataProvider;
 use gitql_cli::arguments::OutputFormat;
 use gitql_cli::diagnostic_reporter;
@@ -101,13 +101,14 @@ fn launch_clangql_repl(arguments: Arguments) {
     let mut input = String::new();
 
     loop {
+        let stdio = std::io::stdin();
         // Render Prompt only if input is received from terminal
-        if atty::is(Stream::Stdin) {
+        if stdio.is_terminal() {
             print!("clangql > ");
         }
 
         std::io::Write::flush(&mut std::io::stdout()).expect("flush failed!");
-        match std::io::stdin().read_line(&mut input) {
+        match stdio.read_line(&mut input) {
             Ok(buffer_length) => {
                 if buffer_length == 0 {
                     break;
