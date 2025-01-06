@@ -1,47 +1,48 @@
-use gitql_core::types::DataType;
 use std::collections::HashMap;
 use std::sync::OnceLock;
 
-pub fn tables_fields_types() -> &'static HashMap<&'static str, DataType> {
-    static HASHMAP: OnceLock<HashMap<&'static str, DataType>> = OnceLock::new();
-    HASHMAP.get_or_init(|| {
-        let mut map = HashMap::new();
-        map.insert("name", DataType::Text);
-        map.insert("type", DataType::Text);
-        map.insert("signature", DataType::Text);
-        map.insert("class_name", DataType::Text);
+use gitql_ast::types::base::DataType;
+use gitql_ast::types::boolean::BoolType;
+use gitql_ast::types::integer::IntType;
+use gitql_ast::types::text::TextType;
 
-        map.insert("access_modifier", DataType::Integer);
+pub fn tables_fields_types() -> HashMap<&'static str, Box<dyn DataType>> {
+    let mut map: HashMap<&'static str, Box<dyn DataType>> = HashMap::new();
+    map.insert("name", Box::new(TextType));
+    map.insert("type", Box::new(TextType));
+    map.insert("signature", Box::new(TextType));
+    map.insert("class_name", Box::new(TextType));
 
-        map.insert("is_method", DataType::Boolean);
-        map.insert("is_virtual", DataType::Boolean);
-        map.insert("is_pure_virtual", DataType::Boolean);
-        map.insert("is_static", DataType::Boolean);
-        map.insert("is_const", DataType::Boolean);
-        map.insert("is_variadic", DataType::Boolean);
-        map.insert("is_volatile", DataType::Boolean);
-        map.insert("is_struct", DataType::Boolean);
-        map.insert("has_template", DataType::Boolean);
+    map.insert("access_modifier", Box::new(IntType));
 
-        map.insert("return_type", DataType::Text);
-        map.insert("type_literal", DataType::Text);
+    map.insert("is_method", Box::new(BoolType));
+    map.insert("is_virtual", Box::new(BoolType));
+    map.insert("is_pure_virtual", Box::new(BoolType));
+    map.insert("is_static", Box::new(BoolType));
+    map.insert("is_const", Box::new(BoolType));
+    map.insert("is_variadic", Box::new(BoolType));
+    map.insert("is_volatile", Box::new(BoolType));
+    map.insert("is_struct", Box::new(BoolType));
+    map.insert("has_template", Box::new(BoolType));
 
-        map.insert("args_count", DataType::Integer);
-        map.insert("bases_count", DataType::Integer);
-        map.insert("methods_count", DataType::Integer);
-        map.insert("fields_count", DataType::Integer);
-        map.insert("constants_count", DataType::Integer);
+    map.insert("return_type", Box::new(TextType));
+    map.insert("type_literal", Box::new(TextType));
 
-        map.insert("size", DataType::Integer);
-        map.insert("align", DataType::Integer);
+    map.insert("args_count", Box::new(IntType));
+    map.insert("bases_count", Box::new(IntType));
+    map.insert("methods_count", Box::new(IntType));
+    map.insert("fields_count", Box::new(IntType));
+    map.insert("constants_count", Box::new(IntType));
 
-        // Source code location columns
-        map.insert("file", DataType::Text);
-        map.insert("line", DataType::Integer);
-        map.insert("column", DataType::Integer);
-        map.insert("offset", DataType::Integer);
-        map
-    })
+    map.insert("size", Box::new(IntType));
+    map.insert("align", Box::new(IntType));
+
+    // Source code location columns
+    map.insert("file", Box::new(TextType));
+    map.insert("line", Box::new(IntType));
+    map.insert("column", Box::new(IntType));
+    map.insert("offset", Box::new(IntType));
+    map
 }
 
 pub fn tables_fields_names() -> &'static HashMap<&'static str, Vec<&'static str>> {

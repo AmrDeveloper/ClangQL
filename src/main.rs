@@ -8,18 +8,23 @@ use data_provider::ClangAstDataProvider;
 use gitql_cli::arguments::OutputFormat;
 use gitql_cli::diagnostic_reporter;
 use gitql_cli::diagnostic_reporter::DiagnosticReporter;
-use gitql_cli::render;
+use gitql_cli::printer::base::OutputPrinter;
+use gitql_cli::printer::csv_printer::CSVPrinter;
+use gitql_cli::printer::json_printer::JSONPrinter;
+use gitql_cli::printer::table_printer::TablePrinter;
 use gitql_core::environment::Environment;
 use gitql_core::schema::Schema;
 use gitql_engine::data_provider::DataProvider;
 use gitql_engine::engine;
 use gitql_parser::diagnostic::Diagnostic;
 use gitql_parser::parser;
-use gitql_parser::tokenizer;
+use gitql_parser::tokenizer::Tokenizer;
 use gitql_std::aggregation::aggregation_function_signatures;
 use gitql_std::aggregation::aggregation_functions;
-use gitql_std::function::standard_function_signatures;
-use gitql_std::function::standard_functions;
+use gitql_std::standard::standard_function_signatures;
+use gitql_std::standard::standard_functions;
+use gitql_std::window::window_function_signatures;
+use gitql_std::window::window_functions;
 use schema::tables_fields_names;
 use schema::tables_fields_types;
 
@@ -57,9 +62,13 @@ fn main() {
             let aggregation_signatures = aggregation_function_signatures();
             let aggregation_functions = aggregation_functions();
 
+            let window_signatures = window_function_signatures();
+            let window_function = window_functions();
+
             let mut env = Environment::new(schema);
-            env.with_standard_functions(std_signatures, std_functions);
-            env.with_aggregation_functions(aggregation_signatures, aggregation_functions);
+            env.with_standard_functions(&std_signatures, std_functions);
+            env.with_aggregation_functions(&aggregation_signatures, aggregation_functions);
+            env.with_window_functions(&window_signatures, window_function);
 
             execute_clangql_query(query, &arguments, files, &mut env, &mut reporter);
         }
@@ -94,9 +103,13 @@ fn launch_clangql_repl(arguments: Arguments) {
     let aggregation_signatures = aggregation_function_signatures();
     let aggregation_functions = aggregation_functions();
 
+    let window_signatures = window_function_signatures();
+    let window_function = window_functions();
+
     let mut global_env = Environment::new(schema);
-    global_env.with_standard_functions(std_signatures, std_functions);
-    global_env.with_aggregation_functions(aggregation_signatures, aggregation_functions);
+    global_env.with_standard_functions(&std_signatures, std_functions);
+    global_env.with_aggregation_functions(&aggregation_signatures, aggregation_functions);
+    global_env.with_window_functions(&window_signatures, window_function);
 
     let mut input = String::new();
 
@@ -150,7 +163,7 @@ fn execute_clangql_query(
     reporter: &mut DiagnosticReporter,
 ) {
     let front_start = std::time::Instant::now();
-    let tokenizer_result = tokenizer::tokenize(query.clone());
+    let tokenizer_result = Tokenizer::tokenize(query.clone());
     if tokenizer_result.is_err() {
         let diagnostic = tokenizer_result.err().unwrap();
         reporter.report_diagnostic(&query, *diagnostic);
@@ -188,34 +201,34 @@ fn execute_clangql_query(
     }
 
     // Render the result only if they are selected groups not any other statement
-    let engine_result = evaluation_result.ok().unwrap();
-    if let SelectedGroups(mut groups) = engine_result {
-        match arguments.output_format {
-            OutputFormat::Render => {
-                render::render_objects(&mut groups, arguments.pagination, arguments.page_size);
-            }
-            OutputFormat::JSON => {
-                if let Ok(json) = groups.as_json() {
-                    println!("{}", json);
-                }
-            }
-            OutputFormat::CSV => {
-                if let Ok(csv) = groups.as_csv() {
-                    println!("{}", csv);
-                }
-            }
-        }
-    }
-
     let engine_duration = engine_start.elapsed();
 
-    if arguments.analysis {
-        println!("\n");
-        println!("Analysis:");
-        println!("Frontend : {:?}", front_duration);
-        println!("Engine   : {:?}", engine_duration);
-        println!("Total    : {:?}", (front_duration + engine_duration));
-        println!("\n");
+    let printer: Box<dyn OutputPrinter> = match arguments.output_format {
+        OutputFormat::Render => {
+            Box::new(TablePrinter::new(arguments.pagination, arguments.page_size))
+        }
+        OutputFormat::JSON => Box::new(JSONPrinter {}),
+        OutputFormat::CSV => Box::new(CSVPrinter {}),
+    };
+
+    // Render the result only if they are selected groups not any other statement
+    let evaluations_results = evaluation_result.ok().unwrap();
+    for evaluation_result in evaluations_results {
+        let mut rows_count = 0;
+        if let SelectedGroups(mut groups) = evaluation_result {
+            if !groups.is_empty() {
+                rows_count += groups.groups[0].len();
+                printer.print(&mut groups);
+            }
+        }
+
+        if arguments.analysis {
+            let total_time = front_duration + engine_duration;
+            println!(
+                "{} row in set (total: {:?}, front: {:?}, engine: {:?})",
+                rows_count, total_time, front_duration, engine_duration
+            );
+        }
     }
 }
 
