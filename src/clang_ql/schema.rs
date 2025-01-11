@@ -12,7 +12,7 @@ use gitql_std::aggregation::aggregation_functions;
 use gitql_std::window::window_function_signatures;
 use gitql_std::window::window_functions;
 
-use super::functions::clang_ql_functions;
+use super::functions;
 use super::functions::clang_ql_functions_signatures;
 use super::types::FunctionType;
 use super::types::SourceLocType;
@@ -87,7 +87,7 @@ pub fn create_clang_ql_environment() -> Environment {
     };
 
     let std_signatures = clang_ql_functions_signatures();
-    let std_functions = clang_ql_functions();
+    let std_functions = functions::clang_ql_functions();
 
     let aggregation_signatures = aggregation_function_signatures();
     let aggregation_functions = aggregation_functions();
