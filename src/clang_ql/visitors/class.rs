@@ -4,8 +4,9 @@ use clang_sys::*;
 use std::ffi::c_void;
 use std::ffi::CStr;
 
-use crate::clang_parser::CompilationUnit;
-use crate::visitor::location;
+use crate::clang_ql::clang_parser::CompilationUnit;
+use crate::clang_ql::values::FileLocation;
+use crate::clang_ql::visitors::location;
 
 pub struct ClassNode {
     pub name: String,
@@ -13,7 +14,7 @@ pub struct ClassNode {
     pub is_struct: bool,
     pub size: i64,
     pub align: i64,
-    pub location: location::SourceLocation,
+    pub location: FileLocation,
 }
 
 #[derive(Default)]
@@ -28,8 +29,11 @@ pub fn select_clang_classes(compilation_unit: &CompilationUnit) -> Vec<ClassNode
     let data = &mut classes as *mut Vec<ClassNode> as *mut c_void;
 
     unsafe {
-        let cursor = clang_getTranslationUnitCursor(compilation_unit.translation_unit);
-        clang_visitChildren(cursor, visit_class_or_struct_declaration, data);
+        clang_visitChildren(
+            compilation_unit.cursor,
+            visit_class_or_struct_declaration,
+            data,
+        );
     }
 
     classes

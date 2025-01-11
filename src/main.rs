@@ -1,11 +1,11 @@
 use std::io::IsTerminal;
 use std::path::Path;
 
-use crate::engine::EvaluationResult::SelectedGroups;
 use arguments::Arguments;
 use arguments::Command;
-use clang_parser::parse_files;
-use data_provider::ClangDataProvider;
+use clang_ql::clang_parser::parse_files;
+use clang_ql::data_provider::ClangDataProvider;
+use clang_ql::schema::create_clang_ql_environment;
 use gitql_cli::arguments::OutputFormat;
 use gitql_cli::diagnostic_reporter;
 use gitql_cli::diagnostic_reporter::DiagnosticReporter;
@@ -14,26 +14,15 @@ use gitql_cli::printer::csv_printer::CSVPrinter;
 use gitql_cli::printer::json_printer::JSONPrinter;
 use gitql_cli::printer::table_printer::TablePrinter;
 use gitql_core::environment::Environment;
-use gitql_core::schema::Schema;
 use gitql_engine::data_provider::DataProvider;
 use gitql_engine::engine;
+use gitql_engine::engine::EvaluationResult::SelectedGroups;
 use gitql_parser::diagnostic::Diagnostic;
 use gitql_parser::parser;
 use gitql_parser::tokenizer::Tokenizer;
-use gitql_std::aggregation::aggregation_function_signatures;
-use gitql_std::aggregation::aggregation_functions;
-use gitql_std::standard::standard_function_signatures;
-use gitql_std::standard::standard_functions;
-use gitql_std::window::window_function_signatures;
-use gitql_std::window::window_functions;
-use schema::tables_fields_names;
-use schema::tables_fields_types;
 
 mod arguments;
-mod clang_parser;
-mod data_provider;
-mod schema;
-mod visitor;
+mod clang_ql;
 
 fn main() {
     if cfg!(debug_assertions) {
@@ -53,29 +42,11 @@ fn main() {
                 return;
             }
 
-            let schema = Schema {
-                tables_fields_names: tables_fields_names().to_owned(),
-                tables_fields_types: tables_fields_types().to_owned(),
-            };
-
-            let std_signatures = standard_function_signatures();
-            let std_functions = standard_functions();
-
-            let aggregation_signatures = aggregation_function_signatures();
-            let aggregation_functions = aggregation_functions();
-
-            let window_signatures = window_function_signatures();
-            let window_function = window_functions();
-
-            let mut env = Environment::new(schema);
-            env.with_standard_functions(&std_signatures, std_functions);
-            env.with_aggregation_functions(&aggregation_signatures, aggregation_functions);
-            env.with_window_functions(&window_signatures, window_function);
-
+            let mut env = create_clang_ql_environment();
             let compilation_units = parse_files(files);
             let provider: Box<dyn DataProvider> =
                 Box::new(ClangDataProvider::new(compilation_units));
-            execute_clangql_query(query, &arguments, &mut env, &provider, &mut reporter);
+            execute_clang_ql_query(query, &arguments, &mut env, &provider, &mut reporter);
         }
         Command::Help => {
             arguments::print_help_list();
@@ -97,25 +68,7 @@ fn launch_clangql_repl(arguments: Arguments) {
         return;
     }
 
-    let schema = Schema {
-        tables_fields_names: tables_fields_names().to_owned(),
-        tables_fields_types: tables_fields_types().to_owned(),
-    };
-
-    let std_signatures = standard_function_signatures();
-    let std_functions = standard_functions();
-
-    let aggregation_signatures = aggregation_function_signatures();
-    let aggregation_functions = aggregation_functions();
-
-    let window_signatures = window_function_signatures();
-    let window_function = window_functions();
-
-    let mut global_env = Environment::new(schema);
-    global_env.with_standard_functions(&std_signatures, std_functions);
-    global_env.with_aggregation_functions(&aggregation_signatures, aggregation_functions);
-    global_env.with_window_functions(&window_signatures, window_function);
-
+    let mut global_env = create_clang_ql_environment();
     let compilation_units = parse_files(files);
     let provider: Box<dyn DataProvider> = Box::new(ClangDataProvider::new(compilation_units));
 
@@ -150,7 +103,7 @@ fn launch_clangql_repl(arguments: Arguments) {
             break;
         }
 
-        execute_clangql_query(
+        execute_clang_ql_query(
             stdin_input.to_owned(),
             &arguments,
             &mut global_env,
@@ -163,7 +116,8 @@ fn launch_clangql_repl(arguments: Arguments) {
     }
 }
 
-fn execute_clangql_query(
+#[allow(clippy::borrowed_box)]
+fn execute_clang_ql_query(
     query: String,
     arguments: &Arguments,
     env: &mut Environment,
@@ -194,7 +148,7 @@ fn execute_clangql_query(
     let front_duration = front_start.elapsed();
 
     let engine_start = std::time::Instant::now();
-    let evaluation_result = engine::evaluate(env, &provider, query_node);
+    let evaluation_result = engine::evaluate(env, provider, query_node);
 
     // Report Runtime exceptions if they exists
     if evaluation_result.is_err() {

@@ -10,12 +10,14 @@ use gitql_core::values::null::NullValue;
 use gitql_core::values::text::TextValue;
 use gitql_engine::data_provider::DataProvider;
 
-use crate::clang_parser::CompilationUnit;
-use crate::visitor::class;
-use crate::visitor::enumeration;
-use crate::visitor::function;
-use crate::visitor::global;
-use crate::visitor::unions;
+use crate::clang_ql::clang_parser::CompilationUnit;
+use crate::clang_ql::visitors::class;
+use crate::clang_ql::visitors::enumeration;
+use crate::clang_ql::visitors::function;
+use crate::clang_ql::visitors::global;
+use crate::clang_ql::visitors::unions;
+
+use super::values::SourceLocValue;
 
 pub struct ClangDataProvider {
     pub compilation_units: Vec<CompilationUnit>,
@@ -78,63 +80,48 @@ fn select_classes(
     for class in ast_classes.iter() {
         let mut values: Vec<Box<dyn Value>> = Vec::with_capacity(selected_columns.len());
 
-        for field_name in selected_columns {
-            if field_name == "name" {
+        for column_name in selected_columns {
+            if column_name == "name" {
                 values.push(Box::new(TextValue::new(class.name.to_owned())));
                 continue;
             }
 
-            if field_name == "bases_count" {
+            if column_name == "bases_count" {
                 values.push(Box::new(IntValue::new(class.attributes.bases_count.into())));
                 continue;
             }
 
-            if field_name == "methods_count" {
+            if column_name == "methods_count" {
                 values.push(Box::new(IntValue::new(
                     class.attributes.methods_count.into(),
                 )));
                 continue;
             }
 
-            if field_name == "fields_count" {
+            if column_name == "fields_count" {
                 values.push(Box::new(IntValue::new(
                     class.attributes.fields_count.into(),
                 )));
                 continue;
             }
 
-            if field_name == "is_struct" {
+            if column_name == "is_struct" {
                 values.push(Box::new(BoolValue::new(class.is_struct)));
                 continue;
             }
 
-            if field_name == "size" {
+            if column_name == "size" {
                 values.push(Box::new(IntValue::new(class.size)));
                 continue;
             }
 
-            if field_name == "align" {
+            if column_name == "align" {
                 values.push(Box::new(IntValue::new(class.align)));
                 continue;
             }
 
-            if field_name == "file" {
-                values.push(Box::new(TextValue::new(class.location.file.to_string())));
-                continue;
-            }
-
-            if field_name == "line" {
-                values.push(Box::new(IntValue::new(class.location.line.into())));
-                continue;
-            }
-
-            if field_name == "column" {
-                values.push(Box::new(IntValue::new(class.location.column.into())));
-                continue;
-            }
-
-            if field_name == "offset" {
-                values.push(Box::new(IntValue::new(class.location.offset.into())));
+            if column_name == "source_loc" {
+                values.push(Box::new(SourceLocValue::new(class.location.clone())));
                 continue;
             }
 
@@ -157,42 +144,26 @@ fn select_enums(
     for enumeration in ast_enums.iter() {
         let mut values: Vec<Box<dyn Value>> = Vec::with_capacity(selected_columns.len());
 
-        for field_name in selected_columns {
-            if field_name == "name" {
+        for column_name in selected_columns {
+            if column_name == "name" {
                 values.push(Box::new(TextValue::new(enumeration.name.to_owned())));
                 continue;
             }
 
-            if field_name == "constants_count" {
+            if column_name == "constants_count" {
                 let value = enumeration.attributes.constants_count.into();
                 values.push(Box::new(IntValue::new(value)));
                 continue;
             }
 
-            if field_name == "type_literal" {
+            if column_name == "type_literal" {
                 let value = Box::new(TextValue::new(enumeration.type_literal.to_owned()));
                 values.push(value);
                 continue;
             }
 
-            if field_name == "file" {
-                let value = Box::new(TextValue::new(enumeration.location.file.to_owned()));
-                values.push(value);
-                continue;
-            }
-
-            if field_name == "line" {
-                values.push(Box::new(IntValue::new(enumeration.location.line.into())));
-                continue;
-            }
-
-            if field_name == "column" {
-                values.push(Box::new(IntValue::new(enumeration.location.column.into())));
-                continue;
-            }
-
-            if field_name == "offset" {
-                values.push(Box::new(IntValue::new(enumeration.location.offset.into())));
+            if column_name == "source_loc" {
+                values.push(Box::new(SourceLocValue::new(enumeration.location.clone())));
                 continue;
             }
 
@@ -215,41 +186,25 @@ fn select_unions(
     for union_node in ast_unions.iter() {
         let mut values: Vec<Box<dyn Value>> = Vec::with_capacity(selected_columns.len());
 
-        for field_name in selected_columns {
-            if field_name == "name" {
+        for column_name in selected_columns {
+            if column_name == "name" {
                 values.push(Box::new(TextValue::new(union_node.name.to_owned())));
                 continue;
             }
 
-            if field_name == "fields_count" {
+            if column_name == "fields_count" {
                 let value = union_node.attributes.fields_count.into();
                 values.push(Box::new(IntValue::new(value)));
                 continue;
             }
 
-            if field_name == "size" {
+            if column_name == "size" {
                 values.push(Box::new(IntValue::new(union_node.size)));
                 continue;
             }
 
-            if field_name == "file" {
-                let value = Box::new(TextValue::new(union_node.location.file.to_owned()));
-                values.push(value);
-                continue;
-            }
-
-            if field_name == "line" {
-                values.push(Box::new(IntValue::new(union_node.location.line.into())));
-                continue;
-            }
-
-            if field_name == "column" {
-                values.push(Box::new(IntValue::new(union_node.location.column.into())));
-                continue;
-            }
-
-            if field_name == "offset" {
-                values.push(Box::new(IntValue::new(union_node.location.offset.into())));
+            if column_name == "source_loc" {
+                values.push(Box::new(SourceLocValue::new(union_node.location.clone())));
                 continue;
             }
 
@@ -272,89 +227,74 @@ fn select_functions(
     for function in ast_functions.iter() {
         let mut values: Vec<Box<dyn Value>> = Vec::with_capacity(selected_columns.len());
 
-        for field_name in selected_columns {
-            if field_name == "name" {
+        for column_name in selected_columns {
+            if column_name == "name" {
                 values.push(Box::new(TextValue::new(function.name.to_owned())));
                 continue;
             }
 
-            if field_name == "signature" {
+            if column_name == "signature" {
                 values.push(Box::new(TextValue::new(function.signature.to_owned())));
                 continue;
             }
 
-            if field_name == "args_count" {
+            if column_name == "args_count" {
                 values.push(Box::new(IntValue::new(function.arguments_count as i64)));
                 continue;
             }
 
-            if field_name == "class_name" {
+            if column_name == "class_name" {
                 values.push(Box::new(TextValue::new(function.class_name.to_owned())));
                 continue;
             }
 
-            if field_name == "return_type" {
+            if column_name == "return_type" {
                 values.push(Box::new(TextValue::new(function.return_type.to_owned())));
                 continue;
             }
 
-            if field_name == "is_method" {
+            if column_name == "is_method" {
                 values.push(Box::new(BoolValue::new(function.is_method)));
                 continue;
             }
 
-            if field_name == "is_virtual" {
+            if column_name == "is_virtual" {
                 values.push(Box::new(BoolValue::new(function.is_virtual)));
                 continue;
             }
 
-            if field_name == "is_pure_virtual" {
+            if column_name == "is_pure_virtual" {
                 values.push(Box::new(BoolValue::new(function.is_pure_virtual)));
                 continue;
             }
 
-            if field_name == "is_static" {
+            if column_name == "is_static" {
                 values.push(Box::new(BoolValue::new(function.is_static)));
                 continue;
             }
 
-            if field_name == "is_const" {
+            if column_name == "is_const" {
                 values.push(Box::new(BoolValue::new(function.is_const)));
                 continue;
             }
 
-            if field_name == "has_template" {
+            if column_name == "has_template" {
                 values.push(Box::new(BoolValue::new(function.has_template)));
                 continue;
             }
 
-            if field_name == "access_modifier" {
+            if column_name == "access_modifier" {
                 values.push(Box::new(IntValue::new(function.access_modifier as i64)));
                 continue;
             }
 
-            if field_name == "is_variadic" {
+            if column_name == "is_variadic" {
                 values.push(Box::new(BoolValue::new(function.is_variadic)));
                 continue;
             }
 
-            if field_name == "file" {
-                values.push(Box::new(TextValue::new(function.location.file.to_owned())));
-                continue;
-            }
-
-            if field_name == "line" {
-                values.push(Box::new(IntValue::new(function.location.line.into())));
-                continue;
-            }
-
-            if field_name == "column" {
-                values.push(Box::new(IntValue::new(function.location.column.into())));
-                continue;
-            }
-
-            if field_name == "offset" {
-                values.push(Box::new(IntValue::new(function.location.offset.into())));
+            if column_name == "source_loc" {
+                values.push(Box::new(SourceLocValue::new(function.location.clone())));
                 continue;
             }
 
@@ -376,39 +316,25 @@ fn select_variables(
     let ast_variables = global::select_clang_variables(compilation_unit);
     for variable in ast_variables.iter() {
         let mut values: Vec<Box<dyn Value>> = Vec::with_capacity(selected_columns.len());
-        for field_name in selected_columns {
-            if field_name == "name" {
+        for column_name in selected_columns {
+            if column_name == "name" {
                 values.push(Box::new(TextValue::new(variable.name.to_owned())));
                 continue;
             }
 
-            if field_name == "type" {
+            if column_name == "type" {
                 values.push(Box::new(TextValue::new(variable.type_literal.to_owned())));
                 continue;
             }
 
-            if field_name == "is_volatile" {
+            if column_name == "is_volatile" {
                 values.push(Box::new(BoolValue::new(variable.is_volatile)));
                 continue;
             }
 
-            if field_name == "file" {
-                values.push(Box::new(TextValue::new(variable.location.file.to_string())));
-                continue;
-            }
+            if column_name == "source_loc" {
+                values.push(Box::new(SourceLocValue::new(variable.location.clone())));
 
-            if field_name == "line" {
-                values.push(Box::new(IntValue::new(variable.location.line as i64)));
-                continue;
-            }
-
-            if field_name == "column" {
-                values.push(Box::new(IntValue::new(variable.location.column as i64)));
-                continue;
-            }
-
-            if field_name == "offset" {
-                values.push(Box::new(IntValue::new(variable.location.offset as i64)));
                 continue;
             }
 

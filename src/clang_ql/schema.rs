@@ -5,8 +5,18 @@ use gitql_ast::types::base::DataType;
 use gitql_ast::types::boolean::BoolType;
 use gitql_ast::types::integer::IntType;
 use gitql_ast::types::text::TextType;
+use gitql_core::environment::Environment;
+use gitql_core::schema::Schema;
+use gitql_std::aggregation::aggregation_function_signatures;
+use gitql_std::aggregation::aggregation_functions;
+use gitql_std::standard::standard_function_signatures;
+use gitql_std::standard::standard_functions;
+use gitql_std::window::window_function_signatures;
+use gitql_std::window::window_functions;
 
-pub fn tables_fields_types() -> HashMap<&'static str, Box<dyn DataType>> {
+use super::types::SourceLocType;
+
+fn tables_fields_types() -> HashMap<&'static str, Box<dyn DataType>> {
     let mut map: HashMap<&'static str, Box<dyn DataType>> = HashMap::new();
     map.insert("name", Box::new(TextType));
     map.insert("type", Box::new(TextType));
@@ -38,14 +48,11 @@ pub fn tables_fields_types() -> HashMap<&'static str, Box<dyn DataType>> {
     map.insert("align", Box::new(IntType));
 
     // Source code location columns
-    map.insert("file", Box::new(TextType));
-    map.insert("line", Box::new(IntType));
-    map.insert("column", Box::new(IntType));
-    map.insert("offset", Box::new(IntType));
+    map.insert("source_loc", Box::new(SourceLocType));
     map
 }
 
-pub fn tables_fields_names() -> &'static HashMap<&'static str, Vec<&'static str>> {
+fn tables_fields_names() -> &'static HashMap<&'static str, Vec<&'static str>> {
     static HASHMAP: OnceLock<HashMap<&'static str, Vec<&'static str>>> = OnceLock::new();
     HASHMAP.get_or_init(|| {
         let mut map = HashMap::new();
@@ -59,35 +66,14 @@ pub fn tables_fields_names() -> &'static HashMap<&'static str, Vec<&'static str>
                 "fields_count",
                 "size",
                 "align",
-                "line",
-                "column",
-                "offset",
+                "source_loc",
             ],
         );
         map.insert(
             "enums",
-            vec![
-                "name",
-                "constants_count",
-                "type_literal",
-                "file",
-                "line",
-                "column",
-                "offset",
-            ],
+            vec!["name", "constants_count", "type_literal", "source_loc"],
         );
-        map.insert(
-            "unions",
-            vec![
-                "name",
-                "fields_count",
-                "size",
-                "file",
-                "line",
-                "column",
-                "offset",
-            ],
-        );
+        map.insert("unions", vec!["name", "fields_count", "size", "source_loc"]);
         map.insert(
             "functions",
             vec![
@@ -104,24 +90,32 @@ pub fn tables_fields_names() -> &'static HashMap<&'static str, Vec<&'static str>
                 "has_template",
                 "access_modifier",
                 "is_variadic",
-                "file",
-                "line",
-                "column",
-                "offset",
+                "source_loc",
             ],
         );
-        map.insert(
-            "globals",
-            vec![
-                "name",
-                "type",
-                "is_volatile",
-                "file",
-                "line",
-                "column",
-                "offset",
-            ],
-        );
+        map.insert("globals", vec!["name", "type", "is_volatile", "source_loc"]);
         map
     })
+}
+
+pub fn create_clang_ql_environment() -> Environment {
+    let schema = Schema {
+        tables_fields_names: tables_fields_names().to_owned(),
+        tables_fields_types: tables_fields_types().to_owned(),
+    };
+
+    let std_signatures = standard_function_signatures();
+    let std_functions = standard_functions();
+
+    let aggregation_signatures = aggregation_function_signatures();
+    let aggregation_functions = aggregation_functions();
+
+    let window_signatures = window_function_signatures();
+    let window_function = window_functions();
+
+    let mut env = Environment::new(schema);
+    env.with_standard_functions(&std_signatures, std_functions);
+    env.with_aggregation_functions(&aggregation_signatures, aggregation_functions);
+    env.with_window_functions(&window_signatures, window_function);
+    env
 }

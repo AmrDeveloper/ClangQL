@@ -2,15 +2,17 @@ use std::ffi::CString;
 use std::ptr;
 
 use clang_sys::clang_createIndex;
+use clang_sys::clang_getTranslationUnitCursor;
 use clang_sys::clang_parseTranslationUnit;
+use clang_sys::CXCursor;
 use clang_sys::CXIndex;
 use clang_sys::CXTranslationUnit;
 
 pub struct CompilationUnit {
     #[allow(dead_code)]
     pub path: String,
-
     pub index: CXIndex,
+    pub cursor: CXCursor,
     pub translation_unit: CXTranslationUnit,
 }
 
@@ -35,9 +37,11 @@ pub fn parse_files(files: &[String]) -> Vec<CompilationUnit> {
                 continue;
             }
 
+            let cursor: clang_sys::CXCursor = clang_getTranslationUnitCursor(translation_unit);
             let compilation_unit = CompilationUnit {
                 path: file.to_string(),
                 index,
+                cursor,
                 translation_unit,
             };
 

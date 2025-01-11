@@ -3,14 +3,9 @@ extern crate clang_sys;
 use clang_sys::*;
 use core::ffi::CStr;
 
-pub struct SourceLocation {
-    pub file: String,
-    pub line: u32,
-    pub column: u32,
-    pub offset: u32,
-}
+use crate::clang_ql::values::FileLocation;
 
-pub fn visit_source_location(cursor: CXCursor) -> SourceLocation {
+pub fn visit_source_location(cursor: CXCursor) -> FileLocation {
     unsafe {
         let cursor_location = clang_getCursorLocation(cursor);
 
@@ -32,7 +27,7 @@ pub fn visit_source_location(cursor: CXCursor) -> SourceLocation {
 
         clang_disposeString(file_name);
 
-        SourceLocation {
+        FileLocation {
             file: file_name_str.to_string(),
             line,
             column,

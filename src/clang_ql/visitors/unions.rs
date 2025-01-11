@@ -4,14 +4,15 @@ use clang_sys::*;
 use std::ffi::c_void;
 use std::ffi::CStr;
 
-use crate::clang_parser::CompilationUnit;
-use crate::visitor::location;
+use crate::clang_ql::clang_parser::CompilationUnit;
+use crate::clang_ql::values::FileLocation;
+use crate::clang_ql::visitors::location;
 
 pub struct UnionNode {
     pub name: String,
     pub attributes: UnionAttributes,
     pub size: i64,
-    pub location: location::SourceLocation,
+    pub location: FileLocation,
 }
 
 #[derive(Default)]
@@ -24,8 +25,7 @@ pub fn select_clang_unions(compilation_unit: &CompilationUnit) -> Vec<UnionNode>
     let data = &mut unions as *mut Vec<UnionNode> as *mut c_void;
 
     unsafe {
-        let cursor = clang_getTranslationUnitCursor(compilation_unit.translation_unit);
-        clang_visitChildren(cursor, visit_union_declaration, data);
+        clang_visitChildren(compilation_unit.cursor, visit_union_declaration, data);
     }
 
     unions

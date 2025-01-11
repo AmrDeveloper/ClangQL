@@ -4,14 +4,16 @@ use clang_sys::*;
 use std::ffi::c_void;
 use std::ffi::CStr;
 
-use crate::clang_parser::CompilationUnit;
-use crate::visitor::location;
+use crate::clang_ql::clang_parser::CompilationUnit;
+use crate::clang_ql::values::FileLocation;
+
+use super::location;
 
 pub struct GlobalVariableNode {
     pub name: String,
     pub type_literal: String,
     pub is_volatile: bool,
-    pub location: location::SourceLocation,
+    pub location: FileLocation,
 }
 
 pub fn select_clang_variables(compilation_unit: &CompilationUnit) -> Vec<GlobalVariableNode> {
@@ -19,8 +21,7 @@ pub fn select_clang_variables(compilation_unit: &CompilationUnit) -> Vec<GlobalV
     let data = &mut functions as *mut Vec<GlobalVariableNode> as *mut c_void;
 
     unsafe {
-        let cursor = clang_getTranslationUnitCursor(compilation_unit.translation_unit);
-        clang_visitChildren(cursor, visit_children, data);
+        clang_visitChildren(compilation_unit.cursor, visit_children, data);
     }
 
     functions
@@ -50,7 +51,6 @@ extern "C" fn visit_children(
 
             let is_volatile = clang_isVolatileQualifiedType(field_type) != 0;
             let location = location::visit_source_location(cursor);
-
             variables.push(GlobalVariableNode {
                 name: field_name_str.to_string(),
                 type_literal: field_type_str.to_string(),

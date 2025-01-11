@@ -4,8 +4,9 @@ use clang_sys::*;
 use std::ffi::c_void;
 use std::ffi::CStr;
 
-use crate::clang_parser::CompilationUnit;
-use crate::visitor::location;
+use crate::clang_ql::clang_parser::CompilationUnit;
+use crate::clang_ql::values::FileLocation;
+use crate::clang_ql::visitors::location;
 
 pub struct FunctionNode {
     pub name: String,
@@ -21,7 +22,7 @@ pub struct FunctionNode {
     pub has_template: bool,
     pub access_modifier: i32,
     pub is_variadic: bool,
-    pub location: location::SourceLocation,
+    pub location: FileLocation,
 }
 
 pub fn select_clang_functions(compilation_unit: &CompilationUnit) -> Vec<FunctionNode> {

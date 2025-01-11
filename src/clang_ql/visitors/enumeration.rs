@@ -4,14 +4,15 @@ use clang_sys::*;
 use std::ffi::c_void;
 use std::ffi::CStr;
 
-use crate::clang_parser::CompilationUnit;
-use crate::visitor::location;
+use crate::clang_ql::clang_parser::CompilationUnit;
+use crate::clang_ql::values::FileLocation;
+use crate::clang_ql::visitors::location;
 
 pub struct EnumNode {
     pub name: String,
     pub type_literal: String,
     pub attributes: EnumAttributes,
-    pub location: location::SourceLocation,
+    pub location: FileLocation,
 }
 
 #[derive(Default)]
@@ -24,8 +25,7 @@ pub fn select_clang_enums(compilation_unit: &CompilationUnit) -> Vec<EnumNode> {
     let data = &mut enums as *mut Vec<EnumNode> as *mut c_void;
 
     unsafe {
-        let cursor = clang_getTranslationUnitCursor(compilation_unit.translation_unit);
-        clang_visitChildren(cursor, visit_enum_declaration, data);
+        clang_visitChildren(compilation_unit.cursor, visit_enum_declaration, data);
     }
 
     enums
