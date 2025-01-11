@@ -1,3 +1,4 @@
+use std::fs;
 use std::io::IsTerminal;
 use std::path::Path;
 
@@ -34,6 +35,23 @@ fn main() {
     let command = arguments::parse_arguments(&args);
     match command {
         Command::ReplMode(arguments) => launch_clangql_repl(arguments),
+        Command::ScriptMode(script_file, arguments) => {
+            let mut reporter = DiagnosticReporter::default();
+            let files = &arguments.files;
+            if let Err(error) = validate_files_paths(files) {
+                reporter.report_diagnostic("", Diagnostic::error(error.as_str()));
+                return;
+            }
+
+            let mut env = create_clang_ql_environment();
+            let query =
+                fs::read_to_string(script_file).expect("Should have been able to read the file");
+
+            let compilation_units = parse_files(files);
+            let provider: Box<dyn DataProvider> =
+                Box::new(ClangDataProvider::new(compilation_units));
+            execute_clang_ql_query(query, &arguments, &mut env, &provider, &mut reporter);
+        }
         Command::QueryMode(query, arguments) => {
             let mut reporter = DiagnosticReporter::default();
             let files = &arguments.files;
