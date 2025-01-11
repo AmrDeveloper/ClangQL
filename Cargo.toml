@@ -19,5 +19,5 @@ gitql-cli = "0.35.0"
 gitql-ast = "0.31.0"
 gitql-parser = "0.34.0"
 gitql-engine = "0.35.0"
-clang-sys = "1.8.1"
+clang-sys = { version = "1.8.1", features = ["clang_16_0"] }
 dyn-clone = "1.0.17"

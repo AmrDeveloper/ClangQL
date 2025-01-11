@@ -34,6 +34,8 @@ extern "C" fn visit_children(
         if cursor_kind == CXCursor_FunctionDecl
             || cursor_kind == CXCursor_CXXMethod
             || cursor_kind == CXCursor_FunctionTemplate
+            || cursor_kind == CXCursor_Constructor
+            || cursor_kind == CXCursor_Destructor
         {
             let functions = &mut *(data as *mut Vec<FunctionNode>);
 

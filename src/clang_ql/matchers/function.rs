@@ -1,9 +1,15 @@
+use clang_sys::clang_CXXConstructor_isConvertingConstructor;
+use clang_sys::clang_CXXConstructor_isCopyConstructor;
+use clang_sys::clang_CXXConstructor_isDefaultConstructor;
+use clang_sys::clang_CXXConstructor_isMoveConstructor;
 use clang_sys::clang_CXXMethod_isConst;
 use clang_sys::clang_CXXMethod_isPureVirtual;
 use clang_sys::clang_CXXMethod_isStatic;
 use clang_sys::clang_CXXMethod_isVirtual;
 use clang_sys::clang_getCursorKind;
 use clang_sys::CXCursor_CXXMethod;
+use clang_sys::CXCursor_Constructor;
+use clang_sys::CXCursor_Destructor;
 
 use crate::clang_ql::values::FunctionNode;
 
@@ -62,6 +68,66 @@ impl FunctionMatcher for IsMethodMatcher {
         unsafe {
             let cursor_kind = clang_getCursorKind(function.cursor);
             cursor_kind == CXCursor_CXXMethod
+        }
+    }
+}
+
+#[derive(Clone)]
+pub struct IsConstructorMatcher;
+
+impl FunctionMatcher for IsConstructorMatcher {
+    fn is_match(&self, function: &FunctionNode) -> bool {
+        unsafe {
+            let cursor_kind = clang_getCursorKind(function.cursor);
+            cursor_kind == CXCursor_Constructor
+        }
+    }
+}
+
+#[derive(Clone)]
+pub struct IsDefaultConstructorMatcher;
+
+impl FunctionMatcher for IsDefaultConstructorMatcher {
+    fn is_match(&self, function: &FunctionNode) -> bool {
+        unsafe { clang_CXXConstructor_isDefaultConstructor(function.cursor) != 0 }
+    }
+}
+
+#[derive(Clone)]
+pub struct IsCopyConstructorMatcher;
+
+impl FunctionMatcher for IsCopyConstructorMatcher {
+    fn is_match(&self, function: &FunctionNode) -> bool {
+        unsafe { clang_CXXConstructor_isCopyConstructor(function.cursor) != 0 }
+    }
+}
+
+#[derive(Clone)]
+pub struct IsMoveConstructorMatcher;
+
+impl FunctionMatcher for IsMoveConstructorMatcher {
+    fn is_match(&self, function: &FunctionNode) -> bool {
+        unsafe { clang_CXXConstructor_isMoveConstructor(function.cursor) != 0 }
+    }
+}
+
+#[derive(Clone)]
+pub struct IsConvertingConstructorMatcher;
+
+impl FunctionMatcher for IsConvertingConstructorMatcher {
+    fn is_match(&self, function: &FunctionNode) -> bool {
+        unsafe { clang_CXXConstructor_isConvertingConstructor(function.cursor) != 0 }
+    }
+}
+
+#[derive(Clone)]
+pub struct IsDestructorMatcher;
+
+impl FunctionMatcher for IsDestructorMatcher {
+    fn is_match(&self, function: &FunctionNode) -> bool {
+        unsafe {
+            let cursor_kind = clang_getCursorKind(function.cursor);
+            cursor_kind == CXCursor_Destructor
         }
     }
 }

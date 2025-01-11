@@ -7,8 +7,14 @@ use gitql_core::values::base::Value;
 use gitql_core::values::boolean::BoolValue;
 
 use crate::clang_ql::matchers::IsConstMethodMatcher;
+use crate::clang_ql::matchers::IsConstructorMatcher;
+use crate::clang_ql::matchers::IsConvertingConstructorMatcher;
+use crate::clang_ql::matchers::IsCopyConstructorMatcher;
+use crate::clang_ql::matchers::IsDefaultConstructorMatcher;
 use crate::clang_ql::matchers::IsDeletedMethodMatcher;
+use crate::clang_ql::matchers::IsDestructorMatcher;
 use crate::clang_ql::matchers::IsMethodMatcher;
+use crate::clang_ql::matchers::IsMoveConstructorMatcher;
 use crate::clang_ql::matchers::IsPureVirtualMatcher;
 use crate::clang_ql::matchers::IsStaticMethodMatcher;
 use crate::clang_ql::matchers::IsVirtualMatcher;
@@ -29,6 +35,16 @@ pub(crate) fn register_function_matchers_functions(
     map.insert("m_const", match_const_function);
     map.insert("m_deleted", match_deleted_function);
     map.insert("m_method", match_method_function);
+
+    map.insert("m_constructor", match_constructor_function);
+    map.insert("m_default_constructor", match_default_constructor_function);
+    map.insert("m_copy_constructor", match_copy_constructor_function);
+    map.insert("m_move_constructor", match_move_constructor_function);
+    map.insert(
+        "m_converting_constructor",
+        match_converting_constructor_function,
+    );
+    map.insert("m_destructor", match_destructor_function);
 }
 
 #[inline(always)]
@@ -62,6 +78,36 @@ pub(crate) fn register_function_matchers_signatures(map: &mut HashMap<&'static s
 
     map.insert(
         "m_method",
+        Signature::with_return(Box::new(FunctionMatcherType)),
+    );
+
+    map.insert(
+        "m_constructor",
+        Signature::with_return(Box::new(FunctionMatcherType)),
+    );
+
+    map.insert(
+        "m_default_constructor",
+        Signature::with_return(Box::new(FunctionMatcherType)),
+    );
+
+    map.insert(
+        "m_copy_constructor",
+        Signature::with_return(Box::new(FunctionMatcherType)),
+    );
+
+    map.insert(
+        "m_move_constructor",
+        Signature::with_return(Box::new(FunctionMatcherType)),
+    );
+
+    map.insert(
+        "m_converting_constructor",
+        Signature::with_return(Box::new(FunctionMatcherType)),
+    );
+
+    map.insert(
+        "m_destructor",
         Signature::with_return(Box::new(FunctionMatcherType)),
     );
 }
@@ -103,5 +149,35 @@ fn match_deleted_function(_values: &[Box<dyn Value>]) -> Box<dyn Value> {
 
 fn match_method_function(_values: &[Box<dyn Value>]) -> Box<dyn Value> {
     let matcher = Box::new(IsMethodMatcher);
+    Box::new(FunctionMatcherValue::new(matcher))
+}
+
+fn match_constructor_function(_values: &[Box<dyn Value>]) -> Box<dyn Value> {
+    let matcher = Box::new(IsConstructorMatcher);
+    Box::new(FunctionMatcherValue::new(matcher))
+}
+
+fn match_copy_constructor_function(_values: &[Box<dyn Value>]) -> Box<dyn Value> {
+    let matcher = Box::new(IsCopyConstructorMatcher);
+    Box::new(FunctionMatcherValue::new(matcher))
+}
+
+fn match_move_constructor_function(_values: &[Box<dyn Value>]) -> Box<dyn Value> {
+    let matcher = Box::new(IsMoveConstructorMatcher);
+    Box::new(FunctionMatcherValue::new(matcher))
+}
+
+fn match_default_constructor_function(_values: &[Box<dyn Value>]) -> Box<dyn Value> {
+    let matcher = Box::new(IsDefaultConstructorMatcher);
+    Box::new(FunctionMatcherValue::new(matcher))
+}
+
+fn match_converting_constructor_function(_values: &[Box<dyn Value>]) -> Box<dyn Value> {
+    let matcher = Box::new(IsConvertingConstructorMatcher);
+    Box::new(FunctionMatcherValue::new(matcher))
+}
+
+fn match_destructor_function(_values: &[Box<dyn Value>]) -> Box<dyn Value> {
+    let matcher = Box::new(IsDestructorMatcher);
     Box::new(FunctionMatcherValue::new(matcher))
 }
