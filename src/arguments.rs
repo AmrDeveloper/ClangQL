@@ -175,6 +175,7 @@ pub fn print_help_list() {
     println!();
     println!("Options:");
     println!("-f,  --files <paths>        Path for local files to run query on");
+    println!("-s,  --script <file>        Script file contains one or more query");
     println!("-q,  --query <GQL Query>    ClangQL query to run on selected repositories");
     println!("-p,  --pagination           Enable print result with pagination");
     println!("-ps, --pagesize             Set pagination page size [default: 10]");
