@@ -1,5 +1,7 @@
 use std::vec;
 
+use clang_sys::clang_disposeIndex;
+use clang_sys::clang_disposeTranslationUnit;
 use gitql_core::object::Row;
 use gitql_core::values::base::Value;
 use gitql_core::values::boolean::BoolValue;
@@ -8,54 +10,71 @@ use gitql_core::values::null::NullValue;
 use gitql_core::values::text::TextValue;
 use gitql_engine::data_provider::DataProvider;
 
+use crate::clang_parser::CompilationUnit;
 use crate::visitor::class;
 use crate::visitor::enumeration;
 use crate::visitor::function;
 use crate::visitor::global;
 use crate::visitor::unions;
 
-pub struct ClangAstDataProvider {
-    pub paths: Vec<String>,
+pub struct ClangDataProvider {
+    pub compilation_units: Vec<CompilationUnit>,
 }
 
-impl ClangAstDataProvider {
-    pub fn new(paths: Vec<String>) -> Self {
-        Self { paths }
+impl ClangDataProvider {
+    pub fn new(compilation_units: Vec<CompilationUnit>) -> Self {
+        Self { compilation_units }
     }
 }
 
-impl DataProvider for ClangAstDataProvider {
+impl DataProvider for ClangDataProvider {
     fn provide(&self, table: &str, selected_columns: &[String]) -> Result<Vec<Row>, String> {
         let mut rows: Vec<Row> = vec![];
-
-        for path in &self.paths {
-            let mut selected_rows = select_clang_ast_objects(path, table, selected_columns)?;
+        for compilation_unit in &self.compilation_units {
+            let mut selected_rows =
+                select_clang_ast_objects(compilation_unit, table, selected_columns)?;
             rows.append(&mut selected_rows);
         }
-
         Ok(rows)
     }
 }
 
+impl Drop for ClangDataProvider {
+    fn drop(&mut self) {
+        for compilation_unit in self.compilation_units.iter() {
+            unsafe {
+                // Dispose the translation unit
+                clang_disposeTranslationUnit(compilation_unit.translation_unit);
+
+                // Dispose the index
+                clang_disposeIndex(compilation_unit.index);
+            }
+        }
+    }
+}
+
 fn select_clang_ast_objects(
-    path: &str,
+    compilation_unit: &CompilationUnit,
     table: &str,
     selected_columns: &[String],
 ) -> Result<Vec<Row>, String> {
     let rows = match table {
-        "classes" => select_classes(path, selected_columns)?,
-        "enums" => select_enums(path, selected_columns)?,
-        "unions" => select_unions(path, selected_columns)?,
-        "functions" => select_functions(path, selected_columns)?,
-        "globals" => select_variables(path, selected_columns)?,
+        "classes" => select_classes(compilation_unit, selected_columns)?,
+        "enums" => select_enums(compilation_unit, selected_columns)?,
+        "unions" => select_unions(compilation_unit, selected_columns)?,
+        "functions" => select_functions(compilation_unit, selected_columns)?,
+        "globals" => select_variables(compilation_unit, selected_columns)?,
         _ => vec![Row { values: vec![] }],
     };
     Ok(rows)
 }
 
-fn select_classes(path: &str, selected_columns: &[String]) -> Result<Vec<Row>, String> {
+fn select_classes(
+    compilation_unit: &CompilationUnit,
+    selected_columns: &[String],
+) -> Result<Vec<Row>, String> {
     let mut rows: Vec<Row> = vec![];
-    let ast_classes = class::select_clang_classes(path);
+    let ast_classes = class::select_clang_classes(compilation_unit);
     for class in ast_classes.iter() {
         let mut values: Vec<Box<dyn Value>> = Vec::with_capacity(selected_columns.len());
 
@@ -129,9 +148,12 @@ fn select_classes(path: &str, selected_columns: &[String]) -> Result<Vec<Row>, S
     Ok(rows)
 }
 
-fn select_enums(path: &str, selected_columns: &[String]) -> Result<Vec<Row>, String> {
+fn select_enums(
+    compilation_unit: &CompilationUnit,
+    selected_columns: &[String],
+) -> Result<Vec<Row>, String> {
     let mut rows: Vec<Row> = vec![];
-    let ast_enums = enumeration::select_clang_enums(path);
+    let ast_enums = enumeration::select_clang_enums(compilation_unit);
     for enumeration in ast_enums.iter() {
         let mut values: Vec<Box<dyn Value>> = Vec::with_capacity(selected_columns.len());
 
@@ -184,9 +206,12 @@ fn select_enums(path: &str, selected_columns: &[String]) -> Result<Vec<Row>, Str
     Ok(rows)
 }
 
-fn select_unions(path: &str, selected_columns: &[String]) -> Result<Vec<Row>, String> {
+fn select_unions(
+    compilation_unit: &CompilationUnit,
+    selected_columns: &[String],
+) -> Result<Vec<Row>, String> {
     let mut rows: Vec<Row> = vec![];
-    let ast_unions = unions::select_clang_unions(path);
+    let ast_unions = unions::select_clang_unions(compilation_unit);
     for union_node in ast_unions.iter() {
         let mut values: Vec<Box<dyn Value>> = Vec::with_capacity(selected_columns.len());
 
@@ -238,9 +263,12 @@ fn select_unions(path: &str, selected_columns: &[String]) -> Result<Vec<Row>, St
     Ok(rows)
 }
 
-fn select_functions(path: &str, selected_columns: &[String]) -> Result<Vec<Row>, String> {
+fn select_functions(
+    compilation_unit: &CompilationUnit,
+    selected_columns: &[String],
+) -> Result<Vec<Row>, String> {
     let mut rows: Vec<Row> = vec![];
-    let ast_functions = function::select_clang_functions(path);
+    let ast_functions = function::select_clang_functions(compilation_unit);
     for function in ast_functions.iter() {
         let mut values: Vec<Box<dyn Value>> = Vec::with_capacity(selected_columns.len());
 
@@ -340,9 +368,12 @@ fn select_functions(path: &str, selected_columns: &[String]) -> Result<Vec<Row>,
     Ok(rows)
 }
 
-fn select_variables(path: &str, selected_columns: &[String]) -> Result<Vec<Row>, String> {
+fn select_variables(
+    compilation_unit: &CompilationUnit,
+    selected_columns: &[String],
+) -> Result<Vec<Row>, String> {
     let mut rows: Vec<Row> = vec![];
-    let ast_variables = global::select_clang_variables(path);
+    let ast_variables = global::select_clang_variables(compilation_unit);
     for variable in ast_variables.iter() {
         let mut values: Vec<Box<dyn Value>> = Vec::with_capacity(selected_columns.len());
         for field_name in selected_columns {

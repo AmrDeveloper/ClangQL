@@ -1,11 +1,10 @@
 extern crate clang_sys;
 
 use clang_sys::*;
-use std::ffi::c_char;
 use std::ffi::c_void;
 use std::ffi::CStr;
-use std::ptr;
 
+use crate::clang_parser::CompilationUnit;
 use crate::visitor::location;
 
 pub struct FunctionNode {
@@ -25,30 +24,13 @@ pub struct FunctionNode {
     pub location: location::SourceLocation,
 }
 
-pub fn select_clang_functions(path: &str) -> Vec<FunctionNode> {
+pub fn select_clang_functions(compilation_unit: &CompilationUnit) -> Vec<FunctionNode> {
     let mut functions: Vec<FunctionNode> = Vec::new();
     let data = &mut functions as *mut Vec<FunctionNode> as *mut c_void;
 
     unsafe {
-        let index = clang_createIndex(0, 0);
-        let translation_unit: CXTranslationUnit = clang_parseTranslationUnit(
-            index,
-            path.as_ptr() as *const c_char,
-            ptr::null_mut(),
-            0,
-            ptr::null_mut(),
-            0,
-            0,
-        );
-
-        let cursor = clang_getTranslationUnitCursor(translation_unit);
+        let cursor = clang_getTranslationUnitCursor(compilation_unit.translation_unit);
         clang_visitChildren(cursor, visit_children, data);
-
-        // Dispose the translation unit
-        clang_disposeTranslationUnit(translation_unit);
-
-        // Dispose the index
-        clang_disposeIndex(index);
     }
 
     functions

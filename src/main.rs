@@ -4,7 +4,8 @@ use std::path::Path;
 use crate::engine::EvaluationResult::SelectedGroups;
 use arguments::Arguments;
 use arguments::Command;
-use data_provider::ClangAstDataProvider;
+use clang_parser::parse_files;
+use data_provider::ClangDataProvider;
 use gitql_cli::arguments::OutputFormat;
 use gitql_cli::diagnostic_reporter;
 use gitql_cli::diagnostic_reporter::DiagnosticReporter;
@@ -29,6 +30,7 @@ use schema::tables_fields_names;
 use schema::tables_fields_types;
 
 mod arguments;
+mod clang_parser;
 mod data_provider;
 mod schema;
 mod visitor;
@@ -70,7 +72,10 @@ fn main() {
             env.with_aggregation_functions(&aggregation_signatures, aggregation_functions);
             env.with_window_functions(&window_signatures, window_function);
 
-            execute_clangql_query(query, &arguments, files, &mut env, &mut reporter);
+            let compilation_units = parse_files(files);
+            let provider: Box<dyn DataProvider> =
+                Box::new(ClangDataProvider::new(compilation_units));
+            execute_clangql_query(query, &arguments, &mut env, &provider, &mut reporter);
         }
         Command::Help => {
             arguments::print_help_list();
@@ -111,6 +116,9 @@ fn launch_clangql_repl(arguments: Arguments) {
     global_env.with_aggregation_functions(&aggregation_signatures, aggregation_functions);
     global_env.with_window_functions(&window_signatures, window_function);
 
+    let compilation_units = parse_files(files);
+    let provider: Box<dyn DataProvider> = Box::new(ClangDataProvider::new(compilation_units));
+
     let mut input = String::new();
 
     loop {
@@ -145,8 +153,8 @@ fn launch_clangql_repl(arguments: Arguments) {
         execute_clangql_query(
             stdin_input.to_owned(),
             &arguments,
-            files,
             &mut global_env,
+            &provider,
             &mut reporter,
         );
 
@@ -158,8 +166,8 @@ fn launch_clangql_repl(arguments: Arguments) {
 fn execute_clangql_query(
     query: String,
     arguments: &Arguments,
-    files: &[String],
     env: &mut Environment,
+    provider: &Box<dyn DataProvider>,
     reporter: &mut DiagnosticReporter,
 ) {
     let front_start = std::time::Instant::now();
@@ -186,9 +194,6 @@ fn execute_clangql_query(
     let front_duration = front_start.elapsed();
 
     let engine_start = std::time::Instant::now();
-    let files = files.to_vec();
-    let file_provider = ClangAstDataProvider::new(files);
-    let provider: Box<dyn DataProvider> = Box::new(file_provider);
     let evaluation_result = engine::evaluate(env, &provider, query_node);
 
     // Report Runtime exceptions if they exists

@@ -1,11 +1,10 @@
 extern crate clang_sys;
 
 use clang_sys::*;
-use std::ffi::c_char;
 use std::ffi::c_void;
 use std::ffi::CStr;
-use std::ptr;
 
+use crate::clang_parser::CompilationUnit;
 use crate::visitor::location;
 
 pub struct ClassNode {
@@ -24,30 +23,13 @@ pub struct ClassAttributes {
     pub fields_count: u32,
 }
 
-pub fn select_clang_classes(path: &str) -> Vec<ClassNode> {
+pub fn select_clang_classes(compilation_unit: &CompilationUnit) -> Vec<ClassNode> {
     let mut classes: Vec<ClassNode> = Vec::new();
     let data = &mut classes as *mut Vec<ClassNode> as *mut c_void;
 
     unsafe {
-        let index = clang_createIndex(0, 0);
-        let translation_unit: CXTranslationUnit = clang_parseTranslationUnit(
-            index,
-            path.as_ptr() as *const c_char,
-            ptr::null_mut(),
-            0,
-            ptr::null_mut(),
-            0,
-            0,
-        );
-
-        let cursor = clang_getTranslationUnitCursor(translation_unit);
+        let cursor = clang_getTranslationUnitCursor(compilation_unit.translation_unit);
         clang_visitChildren(cursor, visit_class_or_struct_declaration, data);
-
-        // Dispose the translation unit
-        clang_disposeTranslationUnit(translation_unit);
-
-        // Dispose the index
-        clang_disposeIndex(index);
     }
 
     classes
