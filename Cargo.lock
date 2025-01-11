@@ -91,6 +91,7 @@ name = "clangql"
 version = "0.8.0"
 dependencies = [
  "clang-sys",
+ "dyn-clone",
  "gitql-ast",
  "gitql-cli",
  "gitql-core",

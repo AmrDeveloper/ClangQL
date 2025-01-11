@@ -5,25 +5,8 @@ use std::ffi::c_void;
 use std::ffi::CStr;
 
 use crate::clang_ql::clang_parser::CompilationUnit;
-use crate::clang_ql::values::FileLocation;
+use crate::clang_ql::values::FunctionNode;
 use crate::clang_ql::visitors::location;
-
-pub struct FunctionNode {
-    pub name: String,
-    pub signature: String,
-    pub return_type: String,
-    pub arguments_count: i32,
-    pub class_name: String,
-    pub is_method: bool,
-    pub is_virtual: bool,
-    pub is_pure_virtual: bool,
-    pub is_static: bool,
-    pub is_const: bool,
-    pub has_template: bool,
-    pub access_modifier: i32,
-    pub is_variadic: bool,
-    pub location: FileLocation,
-}
 
 pub fn select_clang_functions(compilation_unit: &CompilationUnit) -> Vec<FunctionNode> {
     let mut functions: Vec<FunctionNode> = Vec::new();
@@ -67,49 +50,14 @@ extern "C" fn visit_children(
             let return_type =
                 CStr::from_ptr(clang_getCString(result_type_spelling)).to_string_lossy();
 
-            let arguments_count = clang_getNumArgTypes(function_type);
-
-            let mut is_method = false;
-            let mut has_template = false;
-            let mut class_name = String::from("None");
-            let mut is_virtual = false;
-            let mut is_pure_virtual = false;
-            let mut is_static = false;
-            let mut is_const = false;
-
-            if cursor_kind == CXCursor_CXXMethod {
-                is_method = true;
-                has_template = cursor_kind == CXCursor_FunctionTemplate;
-
-                let parent_spelling = clang_getCursorSpelling(parent);
-                let parent_name =
-                    CStr::from_ptr(clang_getCString(parent_spelling)).to_string_lossy();
-                class_name = parent_name.to_string();
-
-                is_virtual = clang_CXXMethod_isVirtual(cursor) != 0;
-                is_pure_virtual = clang_CXXMethod_isPureVirtual(cursor) != 0;
-                is_static = clang_CXXMethod_isStatic(cursor) != 0;
-                is_const = clang_CXXMethod_isConst(cursor) != 0;
-            }
-
-            let access_modifier = clang_getCXXAccessSpecifier(cursor);
-            let is_variadic = clang_isFunctionTypeVariadic(function_type) != 0;
             let location = location::visit_source_location(cursor);
 
             functions.push(FunctionNode {
                 name: name.to_string(),
+                cursor,
+                parent,
                 signature: signature.to_string(),
                 return_type: return_type.to_string(),
-                arguments_count,
-                class_name,
-                is_method,
-                is_virtual,
-                is_pure_virtual,
-                is_static,
-                is_const,
-                has_template,
-                access_modifier,
-                is_variadic,
                 location,
             });
 

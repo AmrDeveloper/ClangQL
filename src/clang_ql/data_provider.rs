@@ -17,6 +17,7 @@ use crate::clang_ql::visitors::function;
 use crate::clang_ql::visitors::global;
 use crate::clang_ql::visitors::unions;
 
+use super::values::FunctionValue;
 use super::values::SourceLocValue;
 
 pub struct ClangDataProvider {
@@ -238,58 +239,13 @@ fn select_functions(
                 continue;
             }
 
-            if column_name == "args_count" {
-                values.push(Box::new(IntValue::new(function.arguments_count as i64)));
-                continue;
-            }
-
-            if column_name == "class_name" {
-                values.push(Box::new(TextValue::new(function.class_name.to_owned())));
-                continue;
-            }
-
             if column_name == "return_type" {
                 values.push(Box::new(TextValue::new(function.return_type.to_owned())));
                 continue;
             }
 
-            if column_name == "is_method" {
-                values.push(Box::new(BoolValue::new(function.is_method)));
-                continue;
-            }
-
-            if column_name == "is_virtual" {
-                values.push(Box::new(BoolValue::new(function.is_virtual)));
-                continue;
-            }
-
-            if column_name == "is_pure_virtual" {
-                values.push(Box::new(BoolValue::new(function.is_pure_virtual)));
-                continue;
-            }
-
-            if column_name == "is_static" {
-                values.push(Box::new(BoolValue::new(function.is_static)));
-                continue;
-            }
-
-            if column_name == "is_const" {
-                values.push(Box::new(BoolValue::new(function.is_const)));
-                continue;
-            }
-
-            if column_name == "has_template" {
-                values.push(Box::new(BoolValue::new(function.has_template)));
-                continue;
-            }
-
-            if column_name == "access_modifier" {
-                values.push(Box::new(IntValue::new(function.access_modifier as i64)));
-                continue;
-            }
-
-            if column_name == "is_variadic" {
-                values.push(Box::new(BoolValue::new(function.is_variadic)));
+            if column_name == "ast_function" {
+                values.push(Box::new(FunctionValue::new(function.clone())));
                 continue;
             }
 

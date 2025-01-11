@@ -9,11 +9,12 @@ use gitql_core::environment::Environment;
 use gitql_core::schema::Schema;
 use gitql_std::aggregation::aggregation_function_signatures;
 use gitql_std::aggregation::aggregation_functions;
-use gitql_std::standard::standard_function_signatures;
-use gitql_std::standard::standard_functions;
 use gitql_std::window::window_function_signatures;
 use gitql_std::window::window_functions;
 
+use super::functions::clang_ql_functions;
+use super::functions::clang_ql_functions_signatures;
+use super::types::FunctionType;
 use super::types::SourceLocType;
 
 fn tables_fields_types() -> HashMap<&'static str, Box<dyn DataType>> {
@@ -21,19 +22,10 @@ fn tables_fields_types() -> HashMap<&'static str, Box<dyn DataType>> {
     map.insert("name", Box::new(TextType));
     map.insert("type", Box::new(TextType));
     map.insert("signature", Box::new(TextType));
-    map.insert("class_name", Box::new(TextType));
+    map.insert("ast_function", Box::new(FunctionType));
 
-    map.insert("access_modifier", Box::new(IntType));
-
-    map.insert("is_method", Box::new(BoolType));
-    map.insert("is_virtual", Box::new(BoolType));
-    map.insert("is_pure_virtual", Box::new(BoolType));
-    map.insert("is_static", Box::new(BoolType));
-    map.insert("is_const", Box::new(BoolType));
-    map.insert("is_variadic", Box::new(BoolType));
     map.insert("is_volatile", Box::new(BoolType));
     map.insert("is_struct", Box::new(BoolType));
-    map.insert("has_template", Box::new(BoolType));
 
     map.insert("return_type", Box::new(TextType));
     map.insert("type_literal", Box::new(TextType));
@@ -47,7 +39,6 @@ fn tables_fields_types() -> HashMap<&'static str, Box<dyn DataType>> {
     map.insert("size", Box::new(IntType));
     map.insert("align", Box::new(IntType));
 
-    // Source code location columns
     map.insert("source_loc", Box::new(SourceLocType));
     map
 }
@@ -79,17 +70,8 @@ fn tables_fields_names() -> &'static HashMap<&'static str, Vec<&'static str>> {
             vec![
                 "name",
                 "signature",
-                "args_count",
                 "return_type",
-                "class_name",
-                "is_method",
-                "is_virtual",
-                "is_pure_virtual",
-                "is_static",
-                "is_const",
-                "has_template",
-                "access_modifier",
-                "is_variadic",
+                "ast_function",
                 "source_loc",
             ],
         );
@@ -104,8 +86,8 @@ pub fn create_clang_ql_environment() -> Environment {
         tables_fields_types: tables_fields_types().to_owned(),
     };
 
-    let std_signatures = standard_function_signatures();
-    let std_functions = standard_functions();
+    let std_signatures = clang_ql_functions_signatures();
+    let std_functions = clang_ql_functions();
 
     let aggregation_signatures = aggregation_function_signatures();
     let aggregation_functions = aggregation_functions();
