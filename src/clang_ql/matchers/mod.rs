@@ -1,7 +1,5 @@
 use dyn_clone::DynClone;
 
-use super::values::FunctionNode;
-
 mod function;
 pub use function::AccessSpecifierMatcher;
 pub use function::IsConstMethodMatcher;
@@ -17,8 +15,11 @@ pub use function::IsPureVirtualMatcher;
 pub use function::IsStaticMethodMatcher;
 pub use function::IsVirtualMatcher;
 
-dyn_clone::clone_trait_object!(FunctionMatcher);
+mod combine;
+pub use combine::UnaryCombineMatcher;
 
-pub trait FunctionMatcher: DynClone {
-    fn is_match(&self, node: &FunctionNode) -> bool;
+dyn_clone::clone_trait_object!(<T> Matcher<T>);
+
+pub trait Matcher<T: Clone>: DynClone {
+    fn is_match(&self, node: &T) -> bool;
 }

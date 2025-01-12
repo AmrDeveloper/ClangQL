@@ -9,7 +9,10 @@ use super::FileLocation;
 pub struct FunctionNode {
     pub name: String,
     pub cursor: CXCursor,
+
+    #[allow(dead_code)]
     pub parent: CXCursor,
+
     pub signature: String,
     pub return_type: String,
     pub location: FileLocation,

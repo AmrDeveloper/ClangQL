@@ -18,12 +18,12 @@ use clang_sys::CX_CXXPublic;
 
 use crate::clang_ql::values::FunctionNode;
 
-use super::FunctionMatcher;
+use super::Matcher;
 
 #[derive(Clone)]
 pub struct IsVirtualMatcher;
 
-impl FunctionMatcher for IsVirtualMatcher {
+impl Matcher<FunctionNode> for IsVirtualMatcher {
     fn is_match(&self, function: &FunctionNode) -> bool {
         unsafe { clang_CXXMethod_isVirtual(function.cursor) != 0 }
     }
@@ -32,7 +32,7 @@ impl FunctionMatcher for IsVirtualMatcher {
 #[derive(Clone)]
 pub struct IsPureVirtualMatcher;
 
-impl FunctionMatcher for IsPureVirtualMatcher {
+impl Matcher<FunctionNode> for IsPureVirtualMatcher {
     fn is_match(&self, function: &FunctionNode) -> bool {
         unsafe { clang_CXXMethod_isPureVirtual(function.cursor) != 0 }
     }
@@ -41,7 +41,7 @@ impl FunctionMatcher for IsPureVirtualMatcher {
 #[derive(Clone)]
 pub struct IsStaticMethodMatcher;
 
-impl FunctionMatcher for IsStaticMethodMatcher {
+impl Matcher<FunctionNode> for IsStaticMethodMatcher {
     fn is_match(&self, function: &FunctionNode) -> bool {
         unsafe { clang_CXXMethod_isStatic(function.cursor) != 0 }
     }
@@ -50,7 +50,7 @@ impl FunctionMatcher for IsStaticMethodMatcher {
 #[derive(Clone)]
 pub struct IsConstMethodMatcher;
 
-impl FunctionMatcher for IsConstMethodMatcher {
+impl Matcher<FunctionNode> for IsConstMethodMatcher {
     fn is_match(&self, function: &FunctionNode) -> bool {
         unsafe { clang_CXXMethod_isConst(function.cursor) != 0 }
     }
@@ -59,7 +59,7 @@ impl FunctionMatcher for IsConstMethodMatcher {
 #[derive(Clone)]
 pub struct IsDeletedMethodMatcher;
 
-impl FunctionMatcher for IsDeletedMethodMatcher {
+impl Matcher<FunctionNode> for IsDeletedMethodMatcher {
     fn is_match(&self, function: &FunctionNode) -> bool {
         unsafe { clang_CXXMethod_isConst(function.cursor) != 0 }
     }
@@ -68,7 +68,7 @@ impl FunctionMatcher for IsDeletedMethodMatcher {
 #[derive(Clone)]
 pub struct IsMethodMatcher;
 
-impl FunctionMatcher for IsMethodMatcher {
+impl Matcher<FunctionNode> for IsMethodMatcher {
     fn is_match(&self, function: &FunctionNode) -> bool {
         unsafe { clang_getCursorKind(function.cursor) == CXCursor_CXXMethod }
     }
@@ -77,7 +77,7 @@ impl FunctionMatcher for IsMethodMatcher {
 #[derive(Clone)]
 pub struct IsConstructorMatcher;
 
-impl FunctionMatcher for IsConstructorMatcher {
+impl Matcher<FunctionNode> for IsConstructorMatcher {
     fn is_match(&self, function: &FunctionNode) -> bool {
         unsafe { clang_getCursorKind(function.cursor) == CXCursor_Constructor }
     }
@@ -86,7 +86,7 @@ impl FunctionMatcher for IsConstructorMatcher {
 #[derive(Clone)]
 pub struct IsDefaultConstructorMatcher;
 
-impl FunctionMatcher for IsDefaultConstructorMatcher {
+impl Matcher<FunctionNode> for IsDefaultConstructorMatcher {
     fn is_match(&self, function: &FunctionNode) -> bool {
         unsafe { clang_CXXConstructor_isDefaultConstructor(function.cursor) != 0 }
     }
@@ -95,7 +95,7 @@ impl FunctionMatcher for IsDefaultConstructorMatcher {
 #[derive(Clone)]
 pub struct IsCopyConstructorMatcher;
 
-impl FunctionMatcher for IsCopyConstructorMatcher {
+impl Matcher<FunctionNode> for IsCopyConstructorMatcher {
     fn is_match(&self, function: &FunctionNode) -> bool {
         unsafe { clang_CXXConstructor_isCopyConstructor(function.cursor) != 0 }
     }
@@ -104,7 +104,7 @@ impl FunctionMatcher for IsCopyConstructorMatcher {
 #[derive(Clone)]
 pub struct IsMoveConstructorMatcher;
 
-impl FunctionMatcher for IsMoveConstructorMatcher {
+impl Matcher<FunctionNode> for IsMoveConstructorMatcher {
     fn is_match(&self, function: &FunctionNode) -> bool {
         unsafe { clang_CXXConstructor_isMoveConstructor(function.cursor) != 0 }
     }
@@ -113,7 +113,7 @@ impl FunctionMatcher for IsMoveConstructorMatcher {
 #[derive(Clone)]
 pub struct IsConvertingConstructorMatcher;
 
-impl FunctionMatcher for IsConvertingConstructorMatcher {
+impl Matcher<FunctionNode> for IsConvertingConstructorMatcher {
     fn is_match(&self, function: &FunctionNode) -> bool {
         unsafe { clang_CXXConstructor_isConvertingConstructor(function.cursor) != 0 }
     }
@@ -122,7 +122,7 @@ impl FunctionMatcher for IsConvertingConstructorMatcher {
 #[derive(Clone)]
 pub struct IsDestructorMatcher;
 
-impl FunctionMatcher for IsDestructorMatcher {
+impl Matcher<FunctionNode> for IsDestructorMatcher {
     fn is_match(&self, function: &FunctionNode) -> bool {
         unsafe { clang_getCursorKind(function.cursor) == CXCursor_Destructor }
     }
@@ -153,7 +153,7 @@ impl AccessSpecifierMatcher {
     }
 }
 
-impl FunctionMatcher for AccessSpecifierMatcher {
+impl Matcher<FunctionNode> for AccessSpecifierMatcher {
     fn is_match(&self, function: &FunctionNode) -> bool {
         unsafe { clang_getCXXAccessSpecifier(function.cursor) == self.access }
     }
