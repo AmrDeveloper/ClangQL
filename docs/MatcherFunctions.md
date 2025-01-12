@@ -17,3 +17,11 @@
 |         m_public         |     ()     | FunctionMatcher |    Create Matcher to match public function     |
 |       m_protected        |     ()     | FunctionMatcher |   Create Matcher to match protected function   |
 |        m_private         |     ()     | FunctionMatcher |    Create Matcher to match private function    |
+
+### Combine matchers functions
+
+| Function |        Parameters        |     Return      |                            Description                             |
+| :------: | :----------------------: | :-------------: | :----------------------------------------------------------------: |
+| m_oneof  | (n : ...FunctionMatcher) | FunctionMatcher |   Create a matcher that returns true if any sub matcher is true    |
+| m_allof  | (n : ...FunctionMatcher) | FunctionMatcher | Create a matcher that returns true if all of sub matcher are true  |
+| m_noneof | (n : ...FunctionMatcher) | FunctionMatcher | Create a matcher that returns true if none of sub matcher are true |

@@ -16,6 +16,7 @@ pub use function::IsStaticMethodMatcher;
 pub use function::IsVirtualMatcher;
 
 mod combine;
+pub use combine::CombineMatcher;
 pub use combine::UnaryCombineMatcher;
 
 dyn_clone::clone_trait_object!(<T> Matcher<T>);
