@@ -32,6 +32,8 @@ SELECT LEN("Clang Query Language")
 SELECT "One" IN ("One", "Two", "Three")
 SELECT "Clang Query Language" LIKE "%Query%"
 
+SELECT name, source_loc FROM functions WHERE m_function(ast_function, (m_public() && m_constructor()) || m_default_constructor());
+
 SELECT * FROM functions
 SELECT COUNT(name) from functions WHERE return_type = "int"
 SELECT DISTINCT name AS function_name FROM functions
