@@ -25,6 +25,30 @@ impl DataType for FunctionMatcherType {
         self
     }
 
+    fn can_perform_logical_and_op_with(&self) -> Vec<Box<dyn DataType>> {
+        vec![Box::new(FunctionMatcherType)]
+    }
+
+    fn logical_and_op_result_type(&self, _other: &Box<dyn DataType>) -> Box<dyn DataType> {
+        Box::new(FunctionMatcherType)
+    }
+
+    fn can_perform_logical_or_op_with(&self) -> Vec<Box<dyn DataType>> {
+        vec![Box::new(FunctionMatcherType)]
+    }
+
+    fn logical_or_op_result_type(&self, _other: &Box<dyn DataType>) -> Box<dyn DataType> {
+        Box::new(FunctionMatcherType)
+    }
+
+    fn can_perform_logical_xor_op_with(&self) -> Vec<Box<dyn DataType>> {
+        vec![Box::new(FunctionMatcherType)]
+    }
+
+    fn logical_xor_op_result_type(&self, _other: &Box<dyn DataType>) -> Box<dyn DataType> {
+        Box::new(FunctionMatcherType)
+    }
+
     fn can_perform_bang_op(&self) -> bool {
         true
     }

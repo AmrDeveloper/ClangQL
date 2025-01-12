@@ -72,6 +72,56 @@ impl<T: Clone> Matcher<T> for CombineMatcher<T> {
     }
 }
 
+#[derive(PartialEq, Clone)]
+enum CombineBinaryMatcherKind {
+    And,
+    Or,
+    Xor,
+}
+
+#[derive(Clone)]
+pub struct CombineBinaryMatcher<T> {
+    lhs: Box<dyn Matcher<T>>,
+    rhs: Box<dyn Matcher<T>>,
+    kind: CombineBinaryMatcherKind,
+}
+
+impl<T: Clone> CombineBinaryMatcher<T> {
+    pub fn and(lhs: Box<dyn Matcher<T>>, rhs: Box<dyn Matcher<T>>) -> Self {
+        CombineBinaryMatcher {
+            lhs,
+            rhs,
+            kind: CombineBinaryMatcherKind::And,
+        }
+    }
+
+    pub fn or(lhs: Box<dyn Matcher<T>>, rhs: Box<dyn Matcher<T>>) -> Self {
+        CombineBinaryMatcher {
+            lhs,
+            rhs,
+            kind: CombineBinaryMatcherKind::Or,
+        }
+    }
+
+    pub fn xor(lhs: Box<dyn Matcher<T>>, rhs: Box<dyn Matcher<T>>) -> Self {
+        CombineBinaryMatcher {
+            lhs,
+            rhs,
+            kind: CombineBinaryMatcherKind::Xor,
+        }
+    }
+}
+
+impl<T: Clone> Matcher<T> for CombineBinaryMatcher<T> {
+    fn is_match(&self, node: &T) -> bool {
+        match &self.kind {
+            CombineBinaryMatcherKind::And => self.lhs.is_match(node) && self.rhs.is_match(node),
+            CombineBinaryMatcherKind::Or => self.lhs.is_match(node) || self.rhs.is_match(node),
+            CombineBinaryMatcherKind::Xor => self.lhs.is_match(node) ^ self.rhs.is_match(node),
+        }
+    }
+}
+
 #[derive(Clone)]
 enum CombineUnaryMatcherKind {
     Not,

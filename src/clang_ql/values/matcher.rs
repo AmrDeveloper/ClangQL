@@ -1,6 +1,6 @@
 use gitql_core::values::base::Value;
 
-use crate::clang_ql::matchers::{Matcher, UnaryCombineMatcher};
+use crate::clang_ql::matchers::{CombineBinaryMatcher, Matcher, UnaryCombineMatcher};
 use crate::clang_ql::types::FunctionMatcherType;
 
 use super::FunctionNode;
@@ -35,6 +35,42 @@ impl Value for FunctionMatcherValue {
 
     fn as_any(&self) -> &dyn std::any::Any {
         self
+    }
+
+    fn logical_and_op(&self, other: &Box<dyn Value>) -> Result<Box<dyn Value>, String> {
+        let lhs = self.matcher.clone();
+        let rhs = other
+            .as_any()
+            .downcast_ref::<FunctionMatcherValue>()
+            .unwrap()
+            .matcher
+            .clone();
+        let combine_matcher = Box::new(CombineBinaryMatcher::and(lhs, rhs));
+        Ok(Box::new(FunctionMatcherValue::new(combine_matcher)))
+    }
+
+    fn logical_or_op(&self, other: &Box<dyn Value>) -> Result<Box<dyn Value>, String> {
+        let lhs = self.matcher.clone();
+        let rhs = other
+            .as_any()
+            .downcast_ref::<FunctionMatcherValue>()
+            .unwrap()
+            .matcher
+            .clone();
+        let combine_matcher = Box::new(CombineBinaryMatcher::or(lhs, rhs));
+        Ok(Box::new(FunctionMatcherValue::new(combine_matcher)))
+    }
+
+    fn logical_xor_op(&self, other: &Box<dyn Value>) -> Result<Box<dyn Value>, String> {
+        let lhs = self.matcher.clone();
+        let rhs = other
+            .as_any()
+            .downcast_ref::<FunctionMatcherValue>()
+            .unwrap()
+            .matcher
+            .clone();
+        let combine_matcher = Box::new(CombineBinaryMatcher::xor(lhs, rhs));
+        Ok(Box::new(FunctionMatcherValue::new(combine_matcher)))
     }
 
     fn bang_op(&self) -> Result<Box<dyn Value>, String> {

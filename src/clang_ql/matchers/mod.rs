@@ -16,6 +16,7 @@ pub use function::IsStaticMethodMatcher;
 pub use function::IsVirtualMatcher;
 
 mod combine;
+pub use combine::CombineBinaryMatcher;
 pub use combine::CombineMatcher;
 pub use combine::UnaryCombineMatcher;
 
