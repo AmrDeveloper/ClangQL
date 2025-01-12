@@ -6,6 +6,7 @@ use gitql_core::signature::StandardFunction;
 use gitql_core::values::base::Value;
 use gitql_core::values::boolean::BoolValue;
 
+use crate::clang_ql::matchers::AccessSpecifierMatcher;
 use crate::clang_ql::matchers::IsConstMethodMatcher;
 use crate::clang_ql::matchers::IsConstructorMatcher;
 use crate::clang_ql::matchers::IsConvertingConstructorMatcher;
@@ -45,6 +46,10 @@ pub(crate) fn register_function_matchers_functions(
         match_converting_constructor_function,
     );
     map.insert("m_destructor", match_destructor_function);
+
+    map.insert("m_public", match_public_function);
+    map.insert("m_protected", match_protected_function);
+    map.insert("m_private", match_private_function);
 }
 
 #[inline(always)]
@@ -108,6 +113,21 @@ pub(crate) fn register_function_matchers_signatures(map: &mut HashMap<&'static s
 
     map.insert(
         "m_destructor",
+        Signature::with_return(Box::new(FunctionMatcherType)),
+    );
+
+    map.insert(
+        "m_public",
+        Signature::with_return(Box::new(FunctionMatcherType)),
+    );
+
+    map.insert(
+        "m_protected",
+        Signature::with_return(Box::new(FunctionMatcherType)),
+    );
+
+    map.insert(
+        "m_private",
         Signature::with_return(Box::new(FunctionMatcherType)),
     );
 }
@@ -179,5 +199,20 @@ fn match_converting_constructor_function(_values: &[Box<dyn Value>]) -> Box<dyn 
 
 fn match_destructor_function(_values: &[Box<dyn Value>]) -> Box<dyn Value> {
     let matcher = Box::new(IsDestructorMatcher);
+    Box::new(FunctionMatcherValue::new(matcher))
+}
+
+fn match_public_function(_values: &[Box<dyn Value>]) -> Box<dyn Value> {
+    let matcher = Box::new(AccessSpecifierMatcher::match_public());
+    Box::new(FunctionMatcherValue::new(matcher))
+}
+
+fn match_protected_function(_values: &[Box<dyn Value>]) -> Box<dyn Value> {
+    let matcher = Box::new(AccessSpecifierMatcher::match_protected());
+    Box::new(FunctionMatcherValue::new(matcher))
+}
+
+fn match_private_function(_values: &[Box<dyn Value>]) -> Box<dyn Value> {
+    let matcher = Box::new(AccessSpecifierMatcher::match_private());
     Box::new(FunctionMatcherValue::new(matcher))
 }

@@ -3,6 +3,7 @@ use dyn_clone::DynClone;
 use super::values::FunctionNode;
 
 mod function;
+pub use function::AccessSpecifierMatcher;
 pub use function::IsConstMethodMatcher;
 pub use function::IsConstructorMatcher;
 pub use function::IsConvertingConstructorMatcher;

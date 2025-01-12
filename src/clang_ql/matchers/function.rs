@@ -6,10 +6,15 @@ use clang_sys::clang_CXXMethod_isConst;
 use clang_sys::clang_CXXMethod_isPureVirtual;
 use clang_sys::clang_CXXMethod_isStatic;
 use clang_sys::clang_CXXMethod_isVirtual;
+use clang_sys::clang_getCXXAccessSpecifier;
 use clang_sys::clang_getCursorKind;
 use clang_sys::CXCursor_CXXMethod;
 use clang_sys::CXCursor_Constructor;
 use clang_sys::CXCursor_Destructor;
+use clang_sys::CX_CXXAccessSpecifier;
+use clang_sys::CX_CXXPrivate;
+use clang_sys::CX_CXXProtected;
+use clang_sys::CX_CXXPublic;
 
 use crate::clang_ql::values::FunctionNode;
 
@@ -65,10 +70,7 @@ pub struct IsMethodMatcher;
 
 impl FunctionMatcher for IsMethodMatcher {
     fn is_match(&self, function: &FunctionNode) -> bool {
-        unsafe {
-            let cursor_kind = clang_getCursorKind(function.cursor);
-            cursor_kind == CXCursor_CXXMethod
-        }
+        unsafe { clang_getCursorKind(function.cursor) == CXCursor_CXXMethod }
     }
 }
 
@@ -77,10 +79,7 @@ pub struct IsConstructorMatcher;
 
 impl FunctionMatcher for IsConstructorMatcher {
     fn is_match(&self, function: &FunctionNode) -> bool {
-        unsafe {
-            let cursor_kind = clang_getCursorKind(function.cursor);
-            cursor_kind == CXCursor_Constructor
-        }
+        unsafe { clang_getCursorKind(function.cursor) == CXCursor_Constructor }
     }
 }
 
@@ -125,9 +124,37 @@ pub struct IsDestructorMatcher;
 
 impl FunctionMatcher for IsDestructorMatcher {
     fn is_match(&self, function: &FunctionNode) -> bool {
-        unsafe {
-            let cursor_kind = clang_getCursorKind(function.cursor);
-            cursor_kind == CXCursor_Destructor
+        unsafe { clang_getCursorKind(function.cursor) == CXCursor_Destructor }
+    }
+}
+
+#[derive(Clone)]
+pub struct AccessSpecifierMatcher {
+    access: CX_CXXAccessSpecifier,
+}
+
+impl AccessSpecifierMatcher {
+    pub fn match_public() -> Self {
+        AccessSpecifierMatcher {
+            access: CX_CXXPublic,
         }
+    }
+
+    pub fn match_protected() -> Self {
+        AccessSpecifierMatcher {
+            access: CX_CXXProtected,
+        }
+    }
+
+    pub fn match_private() -> Self {
+        AccessSpecifierMatcher {
+            access: CX_CXXPrivate,
+        }
+    }
+}
+
+impl FunctionMatcher for AccessSpecifierMatcher {
+    fn is_match(&self, function: &FunctionNode) -> bool {
+        unsafe { clang_getCXXAccessSpecifier(function.cursor) == self.access }
     }
 }
