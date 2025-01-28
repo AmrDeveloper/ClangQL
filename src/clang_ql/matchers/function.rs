@@ -11,6 +11,7 @@ use clang_sys::clang_getCursorKind;
 use clang_sys::CXCursor_CXXMethod;
 use clang_sys::CXCursor_Constructor;
 use clang_sys::CXCursor_Destructor;
+use clang_sys::CXCursor_FunctionTemplate;
 use clang_sys::CX_CXXAccessSpecifier;
 use clang_sys::CX_CXXPrivate;
 use clang_sys::CX_CXXProtected;
@@ -19,6 +20,15 @@ use clang_sys::CX_CXXPublic;
 use crate::clang_ql::values::FunctionNode;
 
 use super::Matcher;
+
+#[derive(Clone)]
+pub struct IsTemplateFunction;
+
+impl Matcher<FunctionNode> for IsTemplateFunction {
+    fn is_match(&self, function: &FunctionNode) -> bool {
+        unsafe { clang_getCursorKind(function.cursor) == CXCursor_FunctionTemplate }
+    }
+}
 
 #[derive(Clone)]
 pub struct IsVirtualMatcher;

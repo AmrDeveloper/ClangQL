@@ -18,6 +18,7 @@ use crate::clang_ql::matchers::IsMethodMatcher;
 use crate::clang_ql::matchers::IsMoveConstructorMatcher;
 use crate::clang_ql::matchers::IsPureVirtualMatcher;
 use crate::clang_ql::matchers::IsStaticMethodMatcher;
+use crate::clang_ql::matchers::IsTemplateFunction;
 use crate::clang_ql::matchers::IsVirtualMatcher;
 use crate::clang_ql::types::FunctionMatcherType;
 use crate::clang_ql::types::FunctionType;
@@ -30,6 +31,7 @@ pub(crate) fn register_function_matchers_functions(
 ) {
     map.insert("m_function", match_function);
 
+    map.insert("m_template_function", match_template_function);
     map.insert("m_virtual", match_virtual_function);
     map.insert("m_pure_virtual", match_pure_virtual_function);
     map.insert("m_static", match_static_function);
@@ -59,6 +61,11 @@ pub(crate) fn register_function_matchers_signatures(map: &mut HashMap<&'static s
         Signature::with_return(Box::new(BoolType))
             .add_parameter(Box::new(FunctionType))
             .add_parameter(Box::new(FunctionMatcherType)),
+    );
+
+    map.insert(
+        "m_template_function",
+        Signature::with_return(Box::new(FunctionMatcherType)),
     );
 
     map.insert(
@@ -140,6 +147,11 @@ fn match_function(values: &[Box<dyn Value>]) -> Box<dyn Value> {
         .unwrap();
     let is_matches = function_matcher.matcher.is_match(&function_node.node);
     Box::new(BoolValue::new(is_matches))
+}
+
+fn match_template_function(_values: &[Box<dyn Value>]) -> Box<dyn Value> {
+    let matcher = Box::new(IsTemplateFunction);
+    Box::new(FunctionMatcherValue::new(matcher))
 }
 
 fn match_virtual_function(_values: &[Box<dyn Value>]) -> Box<dyn Value> {

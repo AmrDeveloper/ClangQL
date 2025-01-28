@@ -13,6 +13,7 @@ pub use function::IsMethodMatcher;
 pub use function::IsMoveConstructorMatcher;
 pub use function::IsPureVirtualMatcher;
 pub use function::IsStaticMethodMatcher;
+pub use function::IsTemplateFunction;
 pub use function::IsVirtualMatcher;
 
 mod combine;
