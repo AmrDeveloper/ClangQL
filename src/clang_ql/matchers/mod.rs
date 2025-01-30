@@ -4,6 +4,7 @@ mod function;
 pub use function::AccessSpecifierMatcher;
 pub use function::IsConstMethodMatcher;
 pub use function::IsConstructorMatcher;
+pub use function::IsConversionFunction;
 pub use function::IsConvertingConstructorMatcher;
 pub use function::IsCopyConstructorMatcher;
 pub use function::IsDefaultConstructorMatcher;

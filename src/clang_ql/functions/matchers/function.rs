@@ -9,6 +9,7 @@ use gitql_core::values::boolean::BoolValue;
 use crate::clang_ql::matchers::AccessSpecifierMatcher;
 use crate::clang_ql::matchers::IsConstMethodMatcher;
 use crate::clang_ql::matchers::IsConstructorMatcher;
+use crate::clang_ql::matchers::IsConversionFunction;
 use crate::clang_ql::matchers::IsConvertingConstructorMatcher;
 use crate::clang_ql::matchers::IsCopyConstructorMatcher;
 use crate::clang_ql::matchers::IsDefaultConstructorMatcher;
@@ -32,6 +33,7 @@ pub(crate) fn register_function_matchers_functions(
     map.insert("m_function", match_function);
 
     map.insert("m_template_function", match_template_function);
+    map.insert("m_conversion_function", match_conversion_function);
     map.insert("m_virtual", match_virtual_function);
     map.insert("m_pure_virtual", match_pure_virtual_function);
     map.insert("m_static", match_static_function);
@@ -65,6 +67,11 @@ pub(crate) fn register_function_matchers_signatures(map: &mut HashMap<&'static s
 
     map.insert(
         "m_template_function",
+        Signature::with_return(Box::new(FunctionMatcherType)),
+    );
+
+    map.insert(
+        "m_conversion_function",
         Signature::with_return(Box::new(FunctionMatcherType)),
     );
 
@@ -151,6 +158,11 @@ fn match_function(values: &[Box<dyn Value>]) -> Box<dyn Value> {
 
 fn match_template_function(_values: &[Box<dyn Value>]) -> Box<dyn Value> {
     let matcher = Box::new(IsTemplateFunction);
+    Box::new(FunctionMatcherValue::new(matcher))
+}
+
+fn match_conversion_function(_values: &[Box<dyn Value>]) -> Box<dyn Value> {
+    let matcher = Box::new(IsConversionFunction);
     Box::new(FunctionMatcherValue::new(matcher))
 }
 

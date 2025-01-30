@@ -36,6 +36,7 @@ extern "C" fn visit_children(
             || cursor_kind == CXCursor_FunctionTemplate
             || cursor_kind == CXCursor_Constructor
             || cursor_kind == CXCursor_Destructor
+            || cursor_kind == CXCursor_ConversionFunction
         {
             let functions = &mut *(data as *mut Vec<FunctionNode>);
 

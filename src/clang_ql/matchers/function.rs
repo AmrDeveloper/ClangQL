@@ -10,6 +10,7 @@ use clang_sys::clang_getCXXAccessSpecifier;
 use clang_sys::clang_getCursorKind;
 use clang_sys::CXCursor_CXXMethod;
 use clang_sys::CXCursor_Constructor;
+use clang_sys::CXCursor_ConversionFunction;
 use clang_sys::CXCursor_Destructor;
 use clang_sys::CXCursor_FunctionTemplate;
 use clang_sys::CX_CXXAccessSpecifier;
@@ -27,6 +28,15 @@ pub struct IsTemplateFunction;
 impl Matcher<FunctionNode> for IsTemplateFunction {
     fn is_match(&self, function: &FunctionNode) -> bool {
         unsafe { clang_getCursorKind(function.cursor) == CXCursor_FunctionTemplate }
+    }
+}
+
+#[derive(Clone)]
+pub struct IsConversionFunction;
+
+impl Matcher<FunctionNode> for IsConversionFunction {
+    fn is_match(&self, function: &FunctionNode) -> bool {
+        unsafe { clang_getCursorKind(function.cursor) == CXCursor_ConversionFunction }
     }
 }
 
