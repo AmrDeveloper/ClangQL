@@ -1,5 +1,5 @@
 use clang_sys::CXCursor;
-use gitql_core::values::base::Value;
+use gitql_core::values::Value;
 
 use crate::clang_ql::types::FunctionType;
 
@@ -48,7 +48,7 @@ impl Value for FunctionValue {
         None
     }
 
-    fn data_type(&self) -> Box<dyn gitql_ast::types::base::DataType> {
+    fn data_type(&self) -> Box<dyn gitql_ast::types::DataType> {
         Box::new(FunctionType)
     }
 

@@ -1,10 +1,10 @@
 use std::collections::HashMap;
 use std::sync::OnceLock;
 
-use gitql_ast::types::base::DataType;
 use gitql_ast::types::boolean::BoolType;
 use gitql_ast::types::integer::IntType;
 use gitql_ast::types::text::TextType;
+use gitql_ast::types::DataType;
 use gitql_core::environment::Environment;
 use gitql_core::schema::Schema;
 use gitql_std::aggregation::aggregation_function_signatures;

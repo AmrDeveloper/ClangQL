@@ -3,8 +3,8 @@ use std::collections::HashMap;
 use gitql_ast::types::boolean::BoolType;
 use gitql_core::signature::Signature;
 use gitql_core::signature::StandardFunction;
-use gitql_core::values::base::Value;
 use gitql_core::values::boolean::BoolValue;
+use gitql_core::values::Value;
 
 use crate::clang_ql::matchers::AccessSpecifierMatcher;
 use crate::clang_ql::matchers::IsConstMethodMatcher;

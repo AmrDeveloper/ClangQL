@@ -3,11 +3,11 @@ use std::vec;
 use clang_sys::clang_disposeIndex;
 use clang_sys::clang_disposeTranslationUnit;
 use gitql_core::object::Row;
-use gitql_core::values::base::Value;
 use gitql_core::values::boolean::BoolValue;
 use gitql_core::values::integer::IntValue;
 use gitql_core::values::null::NullValue;
 use gitql_core::values::text::TextValue;
+use gitql_core::values::Value;
 use gitql_engine::data_provider::DataProvider;
 
 use crate::clang_ql::clang_parser::CompilationUnit;

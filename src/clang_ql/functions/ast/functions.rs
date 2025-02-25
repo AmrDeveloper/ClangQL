@@ -9,8 +9,8 @@ use clang_sys::CXCursor_CXXMethod;
 use gitql_ast::types::boolean::BoolType;
 use gitql_core::signature::Signature;
 use gitql_core::signature::StandardFunction;
-use gitql_core::values::base::Value;
 use gitql_core::values::boolean::BoolValue;
+use gitql_core::values::Value;
 
 use crate::clang_ql::types::FunctionType;
 use crate::clang_ql::values::FunctionValue;

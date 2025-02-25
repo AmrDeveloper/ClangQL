@@ -1,4 +1,4 @@
-use gitql_core::values::base::Value;
+use gitql_core::values::Value;
 
 use crate::clang_ql::matchers::{CombineBinaryMatcher, Matcher, UnaryCombineMatcher};
 use crate::clang_ql::types::FunctionMatcherType;
@@ -29,7 +29,7 @@ impl Value for FunctionMatcherValue {
         None
     }
 
-    fn data_type(&self) -> Box<dyn gitql_ast::types::base::DataType> {
+    fn data_type(&self) -> Box<dyn gitql_ast::types::DataType> {
         Box::new(FunctionMatcherType)
     }
 
