@@ -1,6 +1,14 @@
 Change Log
 ==========
 
+Version 0.10.0 *(2025-03-26)*
+-----------------------------
+
+- Implement `m_template_function` function matcher.
+- Implement `m_conversion_function` function matcher.
+- Implement `m_function_decl` function matcher.
+- Implement `m_function_def` function matcher.
+
 Version 0.9.0 *(2025-01-12)*
 -----------------------------
 
