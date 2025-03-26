@@ -15,6 +15,8 @@ use crate::clang_ql::matchers::IsCopyConstructorMatcher;
 use crate::clang_ql::matchers::IsDefaultConstructorMatcher;
 use crate::clang_ql::matchers::IsDeletedMethodMatcher;
 use crate::clang_ql::matchers::IsDestructorMatcher;
+use crate::clang_ql::matchers::IsFunctionDeclaration;
+use crate::clang_ql::matchers::IsFunctionDefination;
 use crate::clang_ql::matchers::IsMethodMatcher;
 use crate::clang_ql::matchers::IsMoveConstructorMatcher;
 use crate::clang_ql::matchers::IsPureVirtualMatcher;
@@ -32,6 +34,8 @@ pub(crate) fn register_function_matchers_functions(
 ) {
     map.insert("m_function", match_function);
 
+    map.insert("m_function_decl", match_function_declaration);
+    map.insert("m_function_def", match_function_defination);
     map.insert("m_template_function", match_template_function);
     map.insert("m_conversion_function", match_conversion_function);
     map.insert("m_virtual", match_virtual_function);
@@ -63,6 +67,16 @@ pub(crate) fn register_function_matchers_signatures(map: &mut HashMap<&'static s
         Signature::with_return(Box::new(BoolType))
             .add_parameter(Box::new(FunctionType))
             .add_parameter(Box::new(FunctionMatcherType)),
+    );
+
+    map.insert(
+        "m_function_decl",
+        Signature::with_return(Box::new(FunctionMatcherType)),
+    );
+
+    map.insert(
+        "m_function_def",
+        Signature::with_return(Box::new(FunctionMatcherType)),
     );
 
     map.insert(
@@ -154,6 +168,16 @@ fn match_function(values: &[Box<dyn Value>]) -> Box<dyn Value> {
         .unwrap();
     let is_matches = function_matcher.matcher.is_match(&function_node.node);
     Box::new(BoolValue::new(is_matches))
+}
+
+fn match_function_declaration(_values: &[Box<dyn Value>]) -> Box<dyn Value> {
+    let matcher = Box::new(IsFunctionDeclaration);
+    Box::new(FunctionMatcherValue::new(matcher))
+}
+
+fn match_function_defination(_values: &[Box<dyn Value>]) -> Box<dyn Value> {
+    let matcher = Box::new(IsFunctionDefination);
+    Box::new(FunctionMatcherValue::new(matcher))
 }
 
 fn match_template_function(_values: &[Box<dyn Value>]) -> Box<dyn Value> {

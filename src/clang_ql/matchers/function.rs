@@ -8,6 +8,8 @@ use clang_sys::clang_CXXMethod_isStatic;
 use clang_sys::clang_CXXMethod_isVirtual;
 use clang_sys::clang_getCXXAccessSpecifier;
 use clang_sys::clang_getCursorKind;
+use clang_sys::clang_isCursorDefinition;
+use clang_sys::clang_isDeclaration;
 use clang_sys::CXCursor_CXXMethod;
 use clang_sys::CXCursor_Constructor;
 use clang_sys::CXCursor_ConversionFunction;
@@ -21,6 +23,24 @@ use clang_sys::CX_CXXPublic;
 use crate::clang_ql::values::FunctionNode;
 
 use super::Matcher;
+
+#[derive(Clone)]
+pub struct IsFunctionDeclaration;
+
+impl Matcher<FunctionNode> for IsFunctionDeclaration {
+    fn is_match(&self, function: &FunctionNode) -> bool {
+        unsafe { clang_isDeclaration(function.cursor.kind) != 0 }
+    }
+}
+
+#[derive(Clone)]
+pub struct IsFunctionDefination;
+
+impl Matcher<FunctionNode> for IsFunctionDefination {
+    fn is_match(&self, function: &FunctionNode) -> bool {
+        unsafe { clang_isCursorDefinition(function.cursor) != 0 }
+    }
+}
 
 #[derive(Clone)]
 pub struct IsTemplateFunction;

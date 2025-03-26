@@ -2,6 +2,8 @@
 
 |         Function         | Parameters |     Return      |                  Description                   |
 | :----------------------: | :--------: | :-------------: | :--------------------------------------------: |
+|     m_function_decl      |     ()     | FunctionMatcher |  Create Matcher to match function declaration  |
+|      m_function_def      |     ()     | FunctionMatcher |  Create Matcher to match template definition   |
 |   m_template_function    |     ()     | FunctionMatcher |   Create Matcher to match template function    |
 |  m_conversion_function   |     ()     | FunctionMatcher |  Create Matcher to match conversion function   |
 |        m_virtual         |     ()     | FunctionMatcher |    Create Matcher to match virtual function    |

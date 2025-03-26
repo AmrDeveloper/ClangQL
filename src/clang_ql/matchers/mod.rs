@@ -10,6 +10,8 @@ pub use function::IsCopyConstructorMatcher;
 pub use function::IsDefaultConstructorMatcher;
 pub use function::IsDeletedMethodMatcher;
 pub use function::IsDestructorMatcher;
+pub use function::IsFunctionDeclaration;
+pub use function::IsFunctionDefination;
 pub use function::IsMethodMatcher;
 pub use function::IsMoveConstructorMatcher;
 pub use function::IsPureVirtualMatcher;
