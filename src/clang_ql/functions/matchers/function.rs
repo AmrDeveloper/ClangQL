@@ -17,6 +17,7 @@ use crate::clang_ql::matchers::IsDeletedMethodMatcher;
 use crate::clang_ql::matchers::IsDestructorMatcher;
 use crate::clang_ql::matchers::IsFunctionDeclaration;
 use crate::clang_ql::matchers::IsFunctionDefination;
+use crate::clang_ql::matchers::IsInlineFunction;
 use crate::clang_ql::matchers::IsMethodMatcher;
 use crate::clang_ql::matchers::IsMoveConstructorMatcher;
 use crate::clang_ql::matchers::IsPureVirtualMatcher;
@@ -38,6 +39,7 @@ pub(crate) fn register_function_matchers_functions(
     map.insert("m_function_def", match_function_defination);
     map.insert("m_template_function", match_template_function);
     map.insert("m_conversion_function", match_conversion_function);
+    map.insert("m_inlined", match_inlined_function);
     map.insert("m_virtual", match_virtual_function);
     map.insert("m_pure_virtual", match_pure_virtual_function);
     map.insert("m_static", match_static_function);
@@ -81,6 +83,11 @@ pub(crate) fn register_function_matchers_signatures(map: &mut HashMap<&'static s
 
     map.insert(
         "m_template_function",
+        Signature::with_return(Box::new(FunctionMatcherType)),
+    );
+
+    map.insert(
+        "m_inlined",
         Signature::with_return(Box::new(FunctionMatcherType)),
     );
 
@@ -187,6 +194,11 @@ fn match_template_function(_values: &[Box<dyn Value>]) -> Box<dyn Value> {
 
 fn match_conversion_function(_values: &[Box<dyn Value>]) -> Box<dyn Value> {
     let matcher = Box::new(IsConversionFunction);
+    Box::new(FunctionMatcherValue::new(matcher))
+}
+
+fn match_inlined_function(_values: &[Box<dyn Value>]) -> Box<dyn Value> {
+    let matcher = Box::new(IsInlineFunction);
     Box::new(FunctionMatcherValue::new(matcher))
 }
 

@@ -6,6 +6,7 @@
 |      m_function_def      |     ()     | FunctionMatcher |  Create Matcher to match template definition   |
 |   m_template_function    |     ()     | FunctionMatcher |   Create Matcher to match template function    |
 |  m_conversion_function   |     ()     | FunctionMatcher |  Create Matcher to match conversion function   |
+|        m_inlined         |     ()     | FunctionMatcher |    Create Matcher to match inlined function    |
 |        m_virtual         |     ()     | FunctionMatcher |    Create Matcher to match virtual function    |
 |      m_pure_virtual      |     ()     | FunctionMatcher | Create Matcher to match pure virtual function  |
 |         m_method         |     ()     | FunctionMatcher |         Create Matcher to match method         |

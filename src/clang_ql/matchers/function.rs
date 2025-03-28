@@ -6,6 +6,7 @@ use clang_sys::clang_CXXMethod_isConst;
 use clang_sys::clang_CXXMethod_isPureVirtual;
 use clang_sys::clang_CXXMethod_isStatic;
 use clang_sys::clang_CXXMethod_isVirtual;
+use clang_sys::clang_Cursor_isFunctionInlined;
 use clang_sys::clang_getCXXAccessSpecifier;
 use clang_sys::clang_getCursorKind;
 use clang_sys::clang_isCursorDefinition;
@@ -39,6 +40,15 @@ pub struct IsFunctionDefination;
 impl Matcher<FunctionNode> for IsFunctionDefination {
     fn is_match(&self, function: &FunctionNode) -> bool {
         unsafe { clang_isCursorDefinition(function.cursor) != 0 }
+    }
+}
+
+#[derive(Clone)]
+pub struct IsInlineFunction;
+
+impl Matcher<FunctionNode> for IsInlineFunction {
+    fn is_match(&self, function: &FunctionNode) -> bool {
+        unsafe { clang_Cursor_isFunctionInlined(function.cursor) != 0 }
     }
 }
 
