@@ -1,0 +1,105 @@
+# Project information
+site_name: ClangQL
+site_url: https://amrdeveloper.github.io/clangql
+site_description: A SQL Like query language to perform queries on LLVM C/C++ files.
+site_author: AmrDeveloper
+
+# Repository
+repo_name: Amrdeveloper/ClangQL
+repo_url: https://github.com/amrdeveloper/ClangQL
+
+# Copyright
+copyright: Copyright &copy; 2025 Amr Hesham
+
+# Configuration
+theme:
+  name: material
+  logo: assets/clangql_logo.svg
+  favicon: assets/clangql_logo.svg
+
+  icon:
+    repo: fontawesome/brands/github
+    edit: material/pencil
+    view: material/eye
+
+  font:
+    code: JetBrains Mono
+
+  palette:
+    - scheme: default
+      primary: white
+      accent: light blue
+      toggle:
+        icon: material/toggle-switch
+        name: Switch to dark mode
+
+    - scheme: slate
+      primary: black
+      accent: light blue
+      toggle:
+        icon: material/toggle-switch-off-outline
+        name: Switch to light mode
+  
+  features:
+    # Content features
+    - content.code.annotate
+    - content.code.copy
+    - content.code.select
+    - content.action.edit
+    - content.tooltips
+
+    # Navigation features
+    - content.code.annotate
+    - navigation.footer
+    - navigation.indexes
+    - navigation.sections
+    - navigation.tracking
+    - navigation.expand
+    - navigation.instant.progress
+
+    # Search features
+    - search.suggest
+    - search.highlight
+    - search.share
+
+  plugins:
+    - optimize
+    - offline
+    - search
+
+# Extensions
+markdown_extensions:
+  - pymdownx.highlight:
+      use_pygments: true
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+
+# Page tree
+nav:
+  - Home: index.md
+  - Tables: tables.md
+  - Matchers:
+    - Function: matchers/function.md
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/amrdeveloper
+      name: AmrDeveloper on Github
+    - icon: fontawesome/brands/twitter
+      link: https://twitter.com/AmrDeveloper
+      name: AmrDeveloper on Twitter
+    - icon: fontawesome/brands/linkedin
+      link: https://www.linkedin.com/in/amrdeveloper
+      name: AmrDeveloper on Linkedin
+    - icon: fontawesome/brands/medium
+      link: https://amrdeveloper.medium.com
+      name: AmrDeveloper on Medium
