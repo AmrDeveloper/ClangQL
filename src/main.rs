@@ -40,7 +40,7 @@ fn main() {
             let files = &arguments.files;
             if let Err(error) = validate_files_paths(files) {
                 reporter.report_diagnostic("", Diagnostic::error(error.as_str()));
-                return;
+                std::process::exit(1);
             }
 
             let mut env = create_clang_ql_environment();
@@ -57,7 +57,7 @@ fn main() {
             let files = &arguments.files;
             if let Err(error) = validate_files_paths(files) {
                 reporter.report_diagnostic("", Diagnostic::error(error.as_str()));
-                return;
+                std::process::exit(1);
             }
 
             let mut env = create_clang_ql_environment();
@@ -83,7 +83,7 @@ fn launch_clangql_repl(arguments: Arguments) {
     let files = &arguments.files;
     if let Err(error) = validate_files_paths(files) {
         reporter.report_diagnostic("", Diagnostic::error(error.as_str()));
-        return;
+        std::process::exit(1);
     }
 
     let mut global_env = create_clang_ql_environment();
@@ -147,7 +147,7 @@ fn execute_clang_ql_query(
     if tokenizer_result.is_err() {
         let diagnostic = tokenizer_result.err().unwrap();
         reporter.report_diagnostic(&query, *diagnostic);
-        return;
+        std::process::exit(1);
     }
 
     let tokens = tokenizer_result.ok().unwrap();
@@ -159,7 +159,7 @@ fn execute_clang_ql_query(
     if parser_result.is_err() {
         let diagnostic = parser_result.err().unwrap();
         reporter.report_diagnostic(&query, *diagnostic);
-        return;
+        std::process::exit(1);
     }
 
     let query_node = parser_result.ok().unwrap();
@@ -174,7 +174,7 @@ fn execute_clang_ql_query(
             &query,
             Diagnostic::exception(&evaluation_result.err().unwrap()),
         );
-        return;
+        std::process::exit(1);
     }
 
     // Render the result only if they are selected groups not any other statement
