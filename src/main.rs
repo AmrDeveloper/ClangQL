@@ -7,13 +7,14 @@ use arguments::Command;
 use clang_ql::clang_parser::parse_files;
 use clang_ql::data_provider::ClangDataProvider;
 use clang_ql::schema::create_clang_ql_environment;
-use gitql_cli::arguments::OutputFormat;
 use gitql_cli::diagnostic_reporter;
 use gitql_cli::diagnostic_reporter::DiagnosticReporter;
-use gitql_cli::printer::base::OutputPrinter;
-use gitql_cli::printer::csv_printer::CSVPrinter;
-use gitql_cli::printer::json_printer::JSONPrinter;
-use gitql_cli::printer::table_printer::TablePrinter;
+use gitql_cli::printer::BaseOutputPrinter;
+use gitql_cli::printer::CSVPrinter;
+use gitql_cli::printer::JSONPrinter;
+use gitql_cli::printer::OutputFormatKind;
+use gitql_cli::printer::TablePrinter;
+use gitql_cli::printer::YAMLPrinter;
 use gitql_core::environment::Environment;
 use gitql_engine::data_provider::DataProvider;
 use gitql_engine::engine;
@@ -180,12 +181,13 @@ fn execute_clang_ql_query(
     // Render the result only if they are selected groups not any other statement
     let engine_duration = engine_start.elapsed();
 
-    let printer: Box<dyn OutputPrinter> = match arguments.output_format {
-        OutputFormat::Render => {
+    let printer: Box<dyn BaseOutputPrinter> = match arguments.output_format {
+        OutputFormatKind::Table => {
             Box::new(TablePrinter::new(arguments.pagination, arguments.page_size))
         }
-        OutputFormat::JSON => Box::new(JSONPrinter {}),
-        OutputFormat::CSV => Box::new(CSVPrinter {}),
+        OutputFormatKind::JSON => Box::new(JSONPrinter),
+        OutputFormatKind::CSV => Box::new(CSVPrinter),
+        OutputFormatKind::YAML => Box::new(YAMLPrinter),
     };
 
     // Render the result only if they are selected groups not any other statement
