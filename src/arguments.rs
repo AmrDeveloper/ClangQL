@@ -57,14 +57,14 @@ pub fn parse_arguments(args: &[String]) -> Command {
         let arg = &args[arg_index];
 
         if !arg.starts_with('-') {
-            return Command::Error(format!("Unknown argument {}", arg));
+            return Command::Error(format!("Unknown argument {arg}"));
         }
 
         match arg.as_ref() {
             "--files" | "-f" => {
                 arg_index += 1;
                 if arg_index >= args_len {
-                    let message = format!("Argument {} must be followed by one or more path", arg);
+                    let message = format!("Argument {arg} must be followed by one or more path");
                     return Command::Error(message);
                 }
 
@@ -90,7 +90,7 @@ pub fn parse_arguments(args: &[String]) -> Command {
             "--query" | "-q" => {
                 arg_index += 1;
                 if arg_index >= args_len {
-                    let message = format!("Argument {} must be followed by the query", arg);
+                    let message = format!("Argument {arg} must be followed by the query");
                     return Command::Error(message);
                 }
 
@@ -100,7 +100,7 @@ pub fn parse_arguments(args: &[String]) -> Command {
             "--script" | "-s" => {
                 arg_index += 1;
                 if arg_index >= args_len {
-                    let message = format!("Argument {} must be followed by the file", arg);
+                    let message = format!("Argument {arg} must be followed by the file");
                     return Command::Error(message);
                 }
 
@@ -118,7 +118,7 @@ pub fn parse_arguments(args: &[String]) -> Command {
             "--pagesize" | "-ps" => {
                 arg_index += 1;
                 if arg_index >= args_len {
-                    let message = format!("Argument {} must be followed by the page size", arg);
+                    let message = format!("Argument {arg} must be followed by the page size");
                     return Command::Error(message);
                 }
 
@@ -134,7 +134,7 @@ pub fn parse_arguments(args: &[String]) -> Command {
             "--output" | "-o" => {
                 arg_index += 1;
                 if arg_index >= args_len {
-                    let message = format!("Argument {} must be followed by output format", arg);
+                    let message = format!("Argument {arg} must be followed by output format");
                     return Command::Error(message);
                 }
 
@@ -152,7 +152,7 @@ pub fn parse_arguments(args: &[String]) -> Command {
                 }
                 arg_index += 1;
             }
-            _ => return Command::Error(format!("Unknown command {}", arg)),
+            _ => return Command::Error(format!("Unknown command {arg}")),
         }
     }
 

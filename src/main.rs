@@ -74,7 +74,7 @@ fn main() {
             println!("ClangQ version {}", env!("CARGO_PKG_VERSION"));
         }
         Command::Error(error_message) => {
-            println!("{}", error_message);
+            println!("{error_message}");
         }
     }
 }
@@ -108,7 +108,7 @@ fn launch_clangql_repl(arguments: Arguments) {
                 }
             }
             Err(error) => {
-                reporter.report_diagnostic(&input, Diagnostic::error(&format!("{}", error)));
+                reporter.report_diagnostic(&input, Diagnostic::error(&format!("{error}")));
             }
         }
 
@@ -204,8 +204,7 @@ fn execute_clang_ql_query(
         if arguments.analysis {
             let total_time = front_duration + engine_duration;
             println!(
-                "{} row in set (total: {:?}, front: {:?}, engine: {:?})",
-                rows_count, total_time, front_duration, engine_duration
+                "{rows_count} row in set (total: {total_time:?}, front: {front_duration:?}, engine: {engine_duration:?})",
             );
         }
     }
@@ -214,7 +213,7 @@ fn execute_clang_ql_query(
 fn validate_files_paths(files: &[String]) -> Result<(), String> {
     for file in files {
         if !Path::new(file).exists() {
-            return Err(format!("File ${} is not exists", file));
+            return Err(format!("File ${file} is not exists"));
         }
     }
     Ok(())
