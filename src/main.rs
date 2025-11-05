@@ -144,7 +144,7 @@ fn execute_clang_ql_query(
     reporter: &mut DiagnosticReporter,
 ) {
     let front_start = std::time::Instant::now();
-    let tokenizer_result = Tokenizer::tokenize(query.clone());
+    let tokenizer_result = Tokenizer::tokenize(&query);
     if tokenizer_result.is_err() {
         let diagnostic = tokenizer_result.err().unwrap();
         reporter.report_diagnostic(&query, *diagnostic);
