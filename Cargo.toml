@@ -13,12 +13,12 @@ categories = ["command-line-utilities"]
 exclude = [".github/**", "docs/**", "media/**", "scripts/**"]
 
 [dependencies]
-gitql-core = "0.18.0"
-gitql-std = "0.18.0"
-gitql-cli = "0.41.0"
-gitql-ast = "0.37.0"
-gitql-parser = "0.40.0"
-gitql-engine = "0.41.0"
+gitql-core = "0.19.0"
+gitql-std = "0.19.0"
+gitql-cli = "0.42.0"
+gitql-ast = "0.38.0"
+gitql-parser = "0.41.0"
+gitql-engine = "0.42.0"
 clang-sys = { version = "1.8.1", features = ["clang_18_0"] }
 dyn-clone = "1.0.19"
 
