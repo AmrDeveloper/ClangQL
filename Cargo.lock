@@ -205,18 +205,18 @@ dependencies = [
 
 [[package]]
 name = "gitql-ast"
-version = "0.38.0"
+version = "0.39.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3bfd10ed558d7b5da2771ac73434ab768ebb9989f5226e9f44e3c4ea4defb0e3"
+checksum = "e3a496292a186c72b0f3cf0c1b1f0e0d3af4cf2a94310f9de13f73c7fdda9a39"
 dependencies = [
  "dyn-clone",
 ]
 
 [[package]]
 name = "gitql-cli"
-version = "0.42.0"
+version = "0.43.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9080518608241f5cdf2e916e32368d253e2d631402866a11f91c26a7a8826f30"
+checksum = "a72595ee00c3fcd0015d5b1b9a56062628cf762f7a726cff5b98c7d5eeb78bdc"
 dependencies = [
  "comfy-table",
  "csv",
@@ -231,9 +231,9 @@ dependencies = [
 
 [[package]]
 name = "gitql-core"
-version = "0.19.0"
+version = "0.20.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4ab03b396c7e7241a4dbc3304b3a6815caf20913863e31b4e718d1140d03accb"
+checksum = "f44c55202f5d34bb72f550e7c028f585ad567e45f61f9321af061be598df7b59"
 dependencies = [
  "chrono",
  "dyn-clone",
@@ -244,9 +244,9 @@ dependencies = [
 
 [[package]]
 name = "gitql-engine"
-version = "0.42.0"
+version = "0.43.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "048e96fd092bdcf7dd09d3969ba6d6b0678ec99eb22483038eb4c4ec891e5c43"
+checksum = "f69f7d99a5fddacc7e2edfd20d46787109311ae2834e6ed2beead91590420027"
 dependencies = [
  "chrono",
  "gitql-ast",
@@ -255,9 +255,9 @@ dependencies = [
 
 [[package]]
 name = "gitql-parser"
-version = "0.41.0"
+version = "0.42.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3369bdb97069a47d40f6b6d2de9054c7bb8e9f26c6b3336e95cb91fb59eb3fdf"
+checksum = "8874713de894801f9284831921eb45d554a943c2b5b1afed621e6d86c049ff0e"
 dependencies = [
  "gitql-ast",
  "gitql-core",
@@ -266,9 +266,9 @@ dependencies = [
 
 [[package]]
 name = "gitql-std"
-version = "0.19.0"
+version = "0.20.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "567c8eb25694db3b4b2f805289e26fc4392ad1c1c6f9d27cb3524f6ddd6f253b"
+checksum = "f05af8993ac8ba458dffcbc5515d7dff07c99deeb9b981214c81b04727ba01b1"
 dependencies = [
  "chrono",
  "gitql-ast",
